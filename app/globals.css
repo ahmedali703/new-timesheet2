@@ -26,13 +26,13 @@
   --radius: 0.75rem;
   --chart-1: 59 130 246;
   --chart-2: 16 185 129;
-  --chart-3: 245 158 11;
+  --chart-3: 249 115 22;
   --chart-4: 239 68 68;
   --chart-5: 168 85 247;
   --gradient-start: 99 102 241;
   --gradient-end: 59 130 246;
   --success: 16 185 129;
-  --warning: 245 158 11;
+  --warning: 249 115 22;
   --info: 14 165 233;
 }
 
@@ -60,7 +60,7 @@
     --gradient-start: 99 102 241;
     --gradient-end: 59 130 246;
     --success: 16 185 129;
-    --warning: 245 158 11;
+    --warning: 249 115 22;
     --info: 14 165 233;
   }
 }

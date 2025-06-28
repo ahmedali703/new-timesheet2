@@ -229,13 +229,13 @@ function DashboardContent() {
         <Card className="card-gradient hover:scale-105 transition-transform duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-gray-700">Total Payout</CardTitle>
-            <div className="p-2 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl">
+            <div className="p-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl">
               <DollarSign className="h-4 w-4 text-white" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-gray-900">{formatCurrency(weekSummary.totalPayout)}</div>
-            <p className="text-sm text-amber-600/70 font-medium mt-1">Potential earnings</p>
+            <p className="text-sm text-purple-600/70 font-medium mt-1">Potential earnings</p>
           </CardContent>
         </Card>
 

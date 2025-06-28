@@ -193,8 +193,8 @@ export function WeekOverview() {
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="bg-amber-100 p-2 rounded-lg">
-                <DollarSign className="h-4 w-4 text-amber-700" />
+              <div className="bg-purple-100 p-2 rounded-lg">
+                <DollarSign className="h-4 w-4 text-purple-700" />
               </div>
               <div>
                 <p className="text-sm font-medium">Expected Earnings</p>

@@ -258,9 +258,9 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : error ? (
-          <div className="bg-amber-50 p-4 rounded-md flex items-start space-x-2">
-            <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
-            <div className="text-sm text-amber-800">{error}</div>
+          <div className="bg-red-50 p-4 rounded-md flex items-start space-x-2">
+            <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
+            <div className="text-sm text-red-800">{error}</div>
           </div>
         ) : tasks.length === 0 ? (
           <div className="space-y-4">
