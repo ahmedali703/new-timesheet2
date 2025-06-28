@@ -65,14 +65,14 @@ export function AdminDashboard() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-gray-900/60 backdrop-blur-sm border border-gray-800 rounded-xl p-2">
+      <div className="bg-black backdrop-blur-sm border border-gray-800 rounded-xl p-2">
         <nav className="flex flex-wrap gap-2">
           <button
             onClick={() => setActiveTab('overview')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'overview'
-                ? 'bg-blue-700 text-white shadow-lg'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
+                ? 'bg-blue-950 text-blue-400 shadow-lg border border-blue-900/50'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-900'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -84,8 +84,8 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('weeks')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'weeks'
-                ? 'bg-blue-700 text-white shadow-lg'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
+                ? 'bg-blue-950 text-blue-400 shadow-lg border border-blue-900/50'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-900'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -97,8 +97,8 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('tasks')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'tasks'
-                ? 'bg-blue-700 text-white shadow-lg'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
+                ? 'bg-blue-950 text-blue-400 shadow-lg border border-blue-900/50'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-900'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -110,52 +110,13 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('payments')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'payments'
-                ? 'bg-blue-700 text-white shadow-lg'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
+                ? 'bg-blue-950 text-blue-400 shadow-lg border border-blue-900/50'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-900'
             }`}
           >
             <div className="flex items-center gap-2">
               <DollarSign className="h-4 w-4" />
               Payments
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveTab('users')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-              activeTab === 'users'
-                ? 'bg-blue-700 text-white shadow-lg'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <UserCog className="h-4 w-4" />
-              Users
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveTab('schedules')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-              activeTab === 'schedules'
-                ? 'bg-blue-700 text-white shadow-lg'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Schedules
-            </div>
-          </button>
-          <button
-            onClick={() => setActiveTab('invoices')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
-              activeTab === 'invoices'
-                ? 'bg-blue-700 text-white shadow-lg'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <Receipt className="h-4 w-4" />
-              Invoices
             </div>
           </button>
         </nav>
@@ -166,10 +127,10 @@ export function AdminDashboard() {
         <div className="space-y-8 animate-slide-in">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-gray-900 border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
+            <Card className="bg-black border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-semibold text-gray-200">Total Developers</CardTitle>
-                <div className="p-2 bg-blue-900/30 rounded-full border border-blue-700/30">
+                <div className="p-2 bg-blue-950/30 rounded-full border border-blue-900/30">
                   <Users className="h-5 w-5 text-blue-400" />
                 </div>
               </CardHeader>
@@ -179,10 +140,10 @@ export function AdminDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-900 border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
+            <Card className="bg-black border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-semibold text-gray-200">Total Hours</CardTitle>
-                <div className="p-2 bg-green-900/30 rounded-full border border-green-700/30">
+                <div className="p-2 bg-green-950/30 rounded-full border border-green-900/30">
                   <Clock className="h-5 w-5 text-green-400" />
                 </div>
               </CardHeader>
@@ -192,7 +153,7 @@ export function AdminDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-900 border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
+            <Card className="bg-black border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-semibold text-gray-200">Total Cost</CardTitle>
                 <div className="p-2 bg-purple-900/30 rounded-full border border-purple-700/30">
@@ -205,7 +166,7 @@ export function AdminDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-900 border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
+            <Card className="bg-black border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-semibold text-gray-200">Pending Tasks</CardTitle>
                 <div className="p-2 bg-orange-900/30 rounded-full border border-orange-700/30">

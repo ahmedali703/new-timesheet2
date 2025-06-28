@@ -3,25 +3,25 @@
 @tailwind utilities;
 
 :root {
-  /* Windows Dark Mode Theme */
-  --background: 18 18 18;
+  /* True Dark Mode Theme - Deeper Blacks */
+  --background: 0 0 0;
   --foreground: 255 255 255;
-  --card: 32 32 32;
+  --card: 16 16 16;
   --card-foreground: 255 255 255;
-  --popover: 32 32 32;
+  --popover: 16 16 16;
   --popover-foreground: 255 255 255;
   --primary: 0 120 215;
   --primary-foreground: 255 255 255;
-  --secondary: 45 45 45;
+  --secondary: 30 30 30;
   --secondary-foreground: 255 255 255;
-  --muted: 28 28 28;
+  --muted: 16 16 16;
   --muted-foreground: 160 160 160;
-  --accent: 45 45 45;
+  --accent: 30 30 30;
   --accent-foreground: 255 255 255;
   --destructive: 196 43 28;
   --destructive-foreground: 255 255 255;
-  --border: 64 64 64;
-  --input: 45 45 45;
+  --border: 38 38 38;
+  --input: 30 30 30;
   --ring: 0 120 215;
   --radius: 0.5rem;
   --chart-1: 0 120 215;
@@ -38,12 +38,12 @@
 
 
 
-/* Windows Dark Mode Body Styling */
+/* True Dark Mode Body Styling */
 body {
   @apply bg-background text-foreground;
   min-height: 100vh;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  background: rgb(18, 18, 18);
+  background: rgb(0, 0, 0);
 }
 
 @layer base {
@@ -62,52 +62,52 @@ body {
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-muted/30;
+    @apply bg-black;
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full;
+    @apply bg-gray-800 rounded-full;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
+    @apply bg-gray-700;
   }
 }
 
 @layer components {
   /* Enhanced Button Styles */
   .btn-primary {
-    @apply bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 
-           text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg shadow-blue-500/25 
-           hover:shadow-xl hover:shadow-blue-500/30 transition-all duration-200 
-           hover:-translate-y-0.5 active:translate-y-0 border-0;
+    @apply bg-blue-800 hover:bg-blue-700 
+           text-white font-semibold py-2.5 px-6 rounded-md border border-blue-900/50 
+           shadow-md shadow-blue-900/10 transition-all duration-200 
+           active:translate-y-0;
   }
   
   .btn-secondary {
-    @apply bg-gray-700 hover:bg-gray-600 text-white font-medium py-2.5 px-6 
-           rounded-xl border border-gray-600 shadow-sm hover:shadow-md 
-           transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0;
+    @apply bg-black hover:bg-gray-900 text-white font-medium py-2.5 px-6 
+           rounded-md border border-gray-800 shadow-sm hover:border-gray-700
+           transition-all duration-200 active:translate-y-0;
   }
   
   .btn-success {
-    @apply bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 
-           text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg shadow-emerald-500/25 
-           hover:shadow-xl hover:shadow-emerald-500/30 transition-all duration-200 
-           hover:-translate-y-0.5 active:translate-y-0 border-0;
+    @apply bg-green-900 hover:bg-green-800 
+           text-white font-semibold py-2.5 px-6 rounded-md border border-green-800 
+           shadow-sm transition-all duration-200 
+           active:translate-y-0;
   }
   
   .btn-warning {
-    @apply bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 
-           text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg shadow-orange-500/25 
-           hover:shadow-xl hover:shadow-orange-500/30 transition-all duration-200 
-           hover:-translate-y-0.5 active:translate-y-0 border-0;
+    @apply bg-orange-900 hover:bg-orange-800 
+           text-white font-semibold py-2.5 px-6 rounded-md border border-orange-800 
+           shadow-sm transition-all duration-200 
+           active:translate-y-0;
   }
   
   .btn-danger {
-    @apply bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 
-           text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg shadow-rose-500/25 
-           hover:shadow-xl hover:shadow-rose-500/30 transition-all duration-200 
-           hover:-translate-y-0.5 active:translate-y-0 border-0;
+    @apply bg-red-900 hover:bg-red-800 
+           text-white font-semibold py-2.5 px-6 rounded-md border border-red-800 
+           shadow-sm transition-all duration-200 
+           active:translate-y-0;
   }
   
   /* Enhanced Card Styles - Dark Mode */

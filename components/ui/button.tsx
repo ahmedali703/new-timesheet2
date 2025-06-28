@@ -17,12 +17,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
           {
-            'bg-primary text-primary-foreground hover:bg-primary/90': variant === 'default',
-            'bg-destructive text-destructive-foreground hover:bg-destructive/90': variant === 'destructive',
-            'border border-input bg-background hover:bg-accent hover:text-accent-foreground': variant === 'outline',
-            'bg-secondary text-secondary-foreground hover:bg-secondary/80': variant === 'secondary',
-            'hover:bg-accent hover:text-accent-foreground': variant === 'ghost',
-            'text-primary underline-offset-4 hover:underline': variant === 'link',
+            'bg-blue-800 text-white hover:bg-blue-700': variant === 'default',
+            'bg-red-900 text-white border border-red-800/50 hover:bg-red-800': variant === 'destructive',
+            'border border-gray-700 bg-black text-gray-300 hover:bg-gray-950 hover:text-white hover:border-blue-900/50': variant === 'outline',
+            'bg-gray-900 text-gray-200 border border-gray-800/50 hover:bg-gray-800/90': variant === 'secondary',
+            'hover:bg-gray-900/50 text-gray-300 hover:text-white': variant === 'ghost',
+            'text-blue-400 underline-offset-4 hover:underline hover:text-blue-300': variant === 'link',
           },
           {
             'h-10 px-4 py-2': size === 'default',

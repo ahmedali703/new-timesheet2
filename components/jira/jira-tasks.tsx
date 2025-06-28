@@ -204,12 +204,12 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   };
   
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-black border border-gray-800">
       <CardHeader>
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle>My Jira Tasks</CardTitle>
-            <CardDescription>Tasks assigned to you in Jira</CardDescription>
+            <CardTitle className="text-white">My Jira Tasks</CardTitle>
+            <CardDescription className="text-gray-300">Tasks assigned to you in Jira</CardDescription>
           </div>
           <div className="flex space-x-2">
             <Button 
@@ -217,6 +217,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
               size="sm"
               onClick={fetchJiraTasks}
               disabled={loading}
+              className="bg-black border-gray-700 text-gray-300 hover:bg-gray-950"
             >
               {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
               Refresh
@@ -225,6 +226,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
               variant="ghost"
               size="sm"
               onClick={() => setShowDebug(!showDebug)}
+              className="text-gray-300 hover:bg-gray-950"
             >
               <Bug className="h-4 w-4 mr-2" />
               {showDebug ? 'Hide Debug' : 'Debug'}
@@ -238,13 +240,13 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
           <div className="relative">
             <Input
               placeholder="Search tasks by key, summary or status"
-              className="pr-10"
+              className="pr-10 bg-black border-gray-700 text-white placeholder:text-gray-500"
               value={searchQuery}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
               <button 
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-gray-100"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-300"
                 onClick={() => setSearchQuery('')}
               >
                 ✕
