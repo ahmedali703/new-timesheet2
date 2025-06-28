@@ -47,88 +47,114 @@ export function AdminDashboard() {
   };
 
   if (loading) {
-    return <div className="flex justify-center py-8">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center py-16">
+        <div className="animate-spin rounded-full h-12 w-12 border-3 border-blue-200 border-t-blue-500"></div>
+        <span className="ml-4 text-lg text-blue-600/70">Loading admin dashboard...</span>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+    <div className="space-y-8 animate-fade-in">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+          Admin Dashboard
+        </h1>
+        <p className="text-blue-600/70 text-lg">Manage your team and projects efficiently</p>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
+      <div className="bg-white/60 backdrop-blur-sm border border-blue-100/50 rounded-xl p-2">
+        <nav className="flex flex-wrap gap-2">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'overview'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'bg-blue-500 text-white shadow-lg'
+                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
             }`}
           >
-            Overview
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Overview
+            </div>
           </button>
           <button
             onClick={() => setActiveTab('weeks')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'weeks'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'bg-blue-500 text-white shadow-lg'
+                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
             }`}
           >
-            Week Management
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4" />
+              Weeks
+            </div>
           </button>
           <button
             onClick={() => setActiveTab('tasks')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'tasks'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'bg-blue-500 text-white shadow-lg'
+                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
             }`}
           >
-            Task Review
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4" />
+              Tasks
+            </div>
           </button>
           <button
             onClick={() => setActiveTab('payments')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'payments'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'bg-blue-500 text-white shadow-lg'
+                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
             }`}
           >
-            Payment Evidence
+            <div className="flex items-center gap-2">
+              <DollarSign className="h-4 w-4" />
+              Payments
+            </div>
           </button>
           <button
             onClick={() => setActiveTab('users')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'users'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'bg-blue-500 text-white shadow-lg'
+                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
             }`}
           >
-            User Management
+            <div className="flex items-center gap-2">
+              <UserCog className="h-4 w-4" />
+              Users
+            </div>
           </button>
           <button
             onClick={() => setActiveTab('schedules')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'schedules'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'bg-blue-500 text-white shadow-lg'
+                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
             }`}
           >
-            Work Schedules
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Schedules
+            </div>
           </button>
           <button
             onClick={() => setActiveTab('invoices')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'invoices'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'bg-blue-500 text-white shadow-lg'
+                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
             }`}
           >
-            <div className="flex items-center">
-              <Receipt className="h-4 w-4 mr-1" />
+            <div className="flex items-center gap-2">
+              <Receipt className="h-4 w-4" />
               Invoices
             </div>
           </button>
@@ -137,50 +163,58 @@ export function AdminDashboard() {
 
       {/* Overview Tab */}
       {activeTab === 'overview' && (
-        <div className="space-y-6">
+        <div className="space-y-8 animate-slide-in">
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="card-gradient hover:scale-105 transition-transform duration-200">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Developers</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-semibold text-gray-700">Total Developers</CardTitle>
+                <div className="p-2 bg-blue-100 rounded-full">
+                  <Users className="h-5 w-5 text-blue-600" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats.totalDevelopers}</div>
-                <p className="text-xs text-muted-foreground">Active freelancers</p>
+                <div className="text-3xl font-bold text-gray-900 mb-1">{stats.totalDevelopers}</div>
+                <p className="text-sm text-blue-600/70 font-medium">Active freelancers</p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="card-gradient hover:scale-105 transition-transform duration-200">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Hours</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-semibold text-gray-700">Total Hours</CardTitle>
+                <div className="p-2 bg-green-100 rounded-full">
+                  <Clock className="h-5 w-5 text-green-600" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats.totalHours}</div>
-                <p className="text-xs text-muted-foreground">This week</p>
+                <div className="text-3xl font-bold text-gray-900 mb-1">{stats.totalHours}</div>
+                <p className="text-sm text-blue-600/70 font-medium">This week</p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="card-gradient hover:scale-105 transition-transform duration-200">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Cost</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-semibold text-gray-700">Total Cost</CardTitle>
+                <div className="p-2 bg-purple-100 rounded-full">
+                  <DollarSign className="h-5 w-5 text-purple-600" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">${stats.totalCost}</div>
-                <p className="text-xs text-muted-foreground">Weekly budget</p>
+                <div className="text-3xl font-bold text-gray-900 mb-1">${stats.totalCost}</div>
+                <p className="text-sm text-blue-600/70 font-medium">Weekly budget</p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="card-gradient hover:scale-105 transition-transform duration-200">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pending Tasks</CardTitle>
-                <AlertCircle className="h-4 w-4 text-yellow-500" />
+                <CardTitle className="text-sm font-semibold text-gray-700">Pending Tasks</CardTitle>
+                <div className="p-2 bg-yellow-100 rounded-full">
+                  <AlertCircle className="h-5 w-5 text-yellow-600" />
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stats.pendingTasks}</div>
-                <p className="text-xs text-muted-foreground">Awaiting review</p>
+                <div className="text-3xl font-bold text-gray-900 mb-1">{stats.pendingTasks}</div>
+                <p className="text-sm text-blue-600/70 font-medium">Awaiting review</p>
               </CardContent>
             </Card>
           </div>
