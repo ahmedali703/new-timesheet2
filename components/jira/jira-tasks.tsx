@@ -14,6 +14,13 @@ export interface JiraTask {
   url?: string;
 }
 
+interface TimesheetEntry {
+  id: string;
+  jiraTaskId: string | null;
+  jiraTaskKey: string | null;
+  status: 'pending' | 'approved' | 'rejected';
+}
+
 interface JiraTasksProps {
   onSelectTaskForTimesheet?: (task: JiraTask) => void;
 }
@@ -31,10 +38,30 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   const [totalTasks, setTotalTasks] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  // Timesheet entries state
+  const [timesheetEntries, setTimesheetEntries] = useState<TimesheetEntry[]>([]);
+  const [loadingTimesheet, setLoadingTimesheet] = useState(false);
 
   useEffect(() => {
     fetchJiraTasks();
+    fetchTimesheetEntries();
   }, [page, pageSize]);
+  
+  // Fetch timesheet entries to check which Jira tasks have already been added
+  const fetchTimesheetEntries = async () => {
+    setLoadingTimesheet(true);
+    try {
+      const response = await fetch('/api/time-entries');
+      if (response.ok) {
+        const data = await response.json();
+        setTimesheetEntries(data.timeEntries || []);
+      }
+    } catch (error) {
+      console.error('Error fetching timesheet entries:', error);
+    } finally {
+      setLoadingTimesheet(false);
+    }
+  };
 
   const fetchJiraTasks = async () => {
     setLoading(true);
@@ -85,7 +112,26 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   const handleSelectForTimesheet = (task: JiraTask) => {
     if (onSelectTaskForTimesheet) {
       onSelectTaskForTimesheet(task);
+      // After adding to timesheet, refresh the timesheet entries
+      setTimeout(() => fetchTimesheetEntries(), 500);
     }
+  };
+  
+  // Check if a task has already been added to the timesheet
+  const getTaskTimesheetStatus = (taskId: string, taskKey: string) => {
+    const entry = timesheetEntries.find(entry => 
+      (entry.jiraTaskId === taskId) || 
+      (entry.jiraTaskKey === taskKey)
+    );
+    return entry ? entry.status : null;
+  };
+  
+  // Get the appropriate background color based on task status
+  const getTaskBackgroundColor = (taskId: string, taskKey: string) => {
+    const status = getTaskTimesheetStatus(taskId, taskKey);
+    if (status === 'approved') return 'bg-green-50';
+    if (status === 'pending') return 'bg-yellow-50';
+    return 'hover:bg-gray-50';
   };
 
   return (
@@ -155,7 +201,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
             {tasks.map((task) => (
               <div 
                 key={task.id} 
-                className="border rounded-lg p-3 hover:bg-gray-50 transition-colors"
+                className={`border rounded-lg p-3 transition-colors ${getTaskBackgroundColor(task.id, task.key)}`}
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -183,15 +229,36 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
                         Open in Jira
                       </a>
                     </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => handleSelectForTimesheet(task)}
-                      className="whitespace-nowrap"
-                    >
-                      <Plus className="h-3 w-3 mr-1" />
-                      Add to Timesheet
-                    </Button>
+                    {getTaskTimesheetStatus(task.id, task.key) ? (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        disabled
+                        className="whitespace-nowrap opacity-50"
+                      >
+                        {getTaskTimesheetStatus(task.id, task.key) === 'approved' ? (
+                          <>
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Approved
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="h-3 w-3 mr-1" />
+                            Added
+                          </>
+                        )}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleSelectForTimesheet(task)}
+                        className="whitespace-nowrap"
+                      >
+                        <Plus className="h-3 w-3 mr-1" />
+                        Add to Timesheet
+                      </Button>
+                    )}
                   </div>
                 </div>
               </div>
