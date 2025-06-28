@@ -5,14 +5,26 @@ import { useSession } from 'next-auth/react';
 import type { Session } from 'next-auth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Plus, Clock, DollarSign, CheckCircle, XCircle, AlertCircle, Link, ListChecks, Calendar, FileText } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Plus, 
+  Clock, 
+  DollarSign, 
+  CheckCircle, 
+  XCircle, 
+  AlertCircle, 
+  Link, 
+  ListChecks, 
+  FileText,
+  RefreshCw
+} from 'lucide-react';
 import { TaskForm } from '@/components/forms/task-form';
 import { formatCurrency } from '@/lib/utils';
 import { WeekOverview } from './week-overview';
 import { PaymentHistory } from './payment-history';
 import { JiraSection } from '@/components/jira/jira-section';
 import { JiraTask } from '@/components/jira/jira-tasks';
+import { useToast } from '@/components/ui/use-toast';
 
 interface Task {
   id: string;
@@ -33,6 +45,7 @@ interface WeekSummary {
 
 export function DeveloperDashboard() {
   const { data: session } = useSession() as { data: Session | null };
+  const { toast } = useToast();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [weekSummary, setWeekSummary] = useState<WeekSummary>({
     totalHours: 0,
@@ -43,6 +56,7 @@ export function DeveloperDashboard() {
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [selectedJiraTask, setSelectedJiraTask] = useState<JiraTask | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState('tasks');
 
   useEffect(() => {
@@ -60,15 +74,30 @@ export function DeveloperDashboard() {
       }
     } catch (error) {
       console.error('Error fetching tasks:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load tasks",
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchTasks();
   };
 
   const handleTaskSubmitted = () => {
     setShowTaskForm(false);
     setSelectedJiraTask(null);
     fetchTasks();
+    toast({
+      title: "Success",
+      description: "Task submitted successfully",
+    });
   };
   
   const handleJiraTaskSelected = (task: JiraTask) => {
@@ -99,16 +128,33 @@ export function DeveloperDashboard() {
   };
 
   if (loading) {
-    return <div className="flex justify-center py-8">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <RefreshCw className="h-8 w-8 animate-spin text-gray-400 mx-auto mb-2" />
+          <p className="text-gray-500">Loading dashboard...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-8">
+      {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold tracking-tight">Developer Dashboard</h2>
-        <Button onClick={() => setShowTaskForm(true)} size="sm">
-          <Plus className="mr-2 h-4 w-4" /> Add Task
-        </Button>
+        <div>
+          <h2 className="text-3xl font-bold tracking-tight">Developer Dashboard</h2>
+          <p className="text-muted-foreground">Track your tasks, hours, and payments</p>
+        </div>
+        <div className="flex gap-2">
+          <Button onClick={handleRefresh} size="sm" variant="outline" disabled={refreshing}>
+            <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          <Button onClick={() => setShowTaskForm(true)} size="sm">
+            <Plus className="mr-2 h-4 w-4" /> Add Task
+          </Button>
+        </div>
       </div>
       
       {/* Week Overview Component */}
@@ -161,111 +207,107 @@ export function DeveloperDashboard() {
         </Card>
       </div>
 
-      {/* Simple Tabs */}
-      <div className="mt-8">
-        {/* Tab Headers */}
-        <div className="flex border-b">
-          <button 
-            onClick={() => setActiveTab('tasks')} 
-            className={activeTab === 'tasks' ? 'border-b-2 border-blue-500 text-blue-600 px-4 py-2 font-medium' : 'text-gray-600 hover:text-gray-800 px-4 py-2'}
-          >
-            <div className="flex items-center gap-2">
-              <ListChecks className="h-4 w-4" /> My Tasks
-            </div>
-          </button>
-          <button 
-            onClick={() => setActiveTab('jira')} 
-            className={activeTab === 'jira' ? 'border-b-2 border-blue-500 text-blue-600 px-4 py-2 font-medium' : 'text-gray-600 hover:text-gray-800 px-4 py-2'}
-          >
-            <div className="flex items-center gap-2">
-              <Link className="h-4 w-4" /> Jira Integration
-            </div>
-          </button>
-          <button 
-            onClick={() => setActiveTab('payments')} 
-            className={activeTab === 'payments' ? 'border-b-2 border-blue-500 text-blue-600 px-4 py-2 font-medium' : 'text-gray-600 hover:text-gray-800 px-4 py-2'}
-          >
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4" /> Payment History
-            </div>
-          </button>
-        </div>
-        
-        {/* Tab Content */}
-        <div className="mt-6">
-          {/* My Tasks Tab */}
-          {activeTab === 'tasks' && (
-            <div>
-              <Card>
-                <CardHeader>
-                  <CardTitle>My Tasks</CardTitle>
-                  <CardDescription>All tasks submitted this week</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {tasks.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">
-                      No tasks submitted yet. Click &quot;Add Task&quot; to get started.
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {tasks.map((task) => (
-                        <div key={task.id} className="border rounded-lg p-4">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-2 mb-2">
-                                {getStatusIcon(task.status)}
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
-                                  {task.status}
-                                </span>
-                                {task.jiraTaskKey && (
-                                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-                                    {task.jiraTaskKey}
-                                  </span>
-                                )}
-                              </div>
-                              <h3 className="font-medium text-gray-900 mb-1">{task.description}</h3>
-                              <p className="text-sm text-gray-500">
-                                {task.hours} hours • {formatCurrency(Number(task.hours) * Number(session?.user?.hourlyRate || 0))}
-                              </p>
-                              {task.adminComment && (
-                                <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
-                                  <strong>Admin feedback:</strong> {task.adminComment}
-                                </div>
-                              )}
-                            </div>
+      {/* Tabs Section */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="tasks" className="flex items-center gap-2">
+            <ListChecks className="h-4 w-4" />
+            My Tasks
+          </TabsTrigger>
+          <TabsTrigger value="jira" className="flex items-center gap-2">
+            <Link className="h-4 w-4" />
+            Jira Integration
+          </TabsTrigger>
+          <TabsTrigger value="payments" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Payment History
+          </TabsTrigger>
+        </TabsList>
+
+        {/* My Tasks Tab */}
+        <TabsContent value="tasks" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>My Tasks</CardTitle>
+              <CardDescription>All tasks submitted this week</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {tasks.length === 0 ? (
+                <div className="text-center py-12">
+                  <ListChecks className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500 mb-4">No tasks submitted yet</p>
+                  <Button onClick={() => setShowTaskForm(true)} variant="outline" size="sm">
+                    <Plus className="mr-2 h-4 w-4" /> Add Your First Task
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {tasks.map((task) => (
+                    <div key={task.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            {getStatusIcon(task.status)}
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
+                              {task.status}
+                            </span>
+                            {task.jiraTaskKey && (
+                              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
+                                {task.jiraTaskKey}
+                              </span>
+                            )}
                           </div>
+                          <h3 className="font-medium text-gray-900 mb-1">{task.description}</h3>
+                          <div className="flex items-center gap-4 text-sm text-gray-500">
+                            <span className="flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {task.hours} hours
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <DollarSign className="h-3 w-3" />
+                              {formatCurrency(Number(task.hours) * Number(session?.user?.hourlyRate || 0))}
+                            </span>
+                          </div>
+                          {task.adminComment && (
+                            <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
+                              <p className="text-sm text-amber-800">
+                                <strong>Admin feedback:</strong> {task.adminComment}
+                              </p>
+                            </div>
+                          )}
                         </div>
-                      ))}
+                      </div>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          )}
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          {/* Jira Integration Tab */}
-          {activeTab === 'jira' && (
-            <div>
-              <div className="mb-2 text-sm text-gray-500">
-                Connect your Jira account to view and select tasks when logging time
-              </div>
-              <Card>
-                <CardContent className="pt-6">
-                  <JiraSection 
-                    onConnect={() => fetchTasks()} 
-                    onSelectTaskForTimesheet={handleJiraTaskSelected} 
-                  />
-                </CardContent>
-              </Card>
-            </div>
-          )}
+        {/* Jira Integration Tab */}
+        <TabsContent value="jira" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Jira Integration</CardTitle>
+              <CardDescription>
+                Connect your Jira account to import tasks and track time seamlessly
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <JiraSection 
+                onConnect={() => fetchTasks()} 
+                onSelectTaskForTimesheet={handleJiraTaskSelected} 
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          {/* Payment History Tab */}
-          {activeTab === 'payments' && (
-            <PaymentHistory />
-          )}
-        </div>
-      </div>
+        {/* Payment History Tab */}
+        <TabsContent value="payments" className="mt-6">
+          <PaymentHistory />
+        </TabsContent>
+      </Tabs>
 
       {/* Task Form Modal */}
       {showTaskForm && (
