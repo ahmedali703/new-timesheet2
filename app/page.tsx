@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Navbar } from '@/components/layout/navbar';
-import { EnhancedDeveloperDashboard } from '@/components/dashboard/enhanced-developer-dashboard';
+import { DeveloperDashboard } from '@/components/dashboard/developer-dashboard';
 import { AdminDashboard } from '@/components/dashboard/admin-dashboard';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
@@ -33,7 +33,7 @@ export default function Home() {
         {session.user?.role === 'admin' || session.user?.role === 'hr' ? (
           <AdminDashboard />
         ) : (
-          <EnhancedDeveloperDashboard />
+          <DeveloperDashboard />
         )}
       </main>
     </div>
