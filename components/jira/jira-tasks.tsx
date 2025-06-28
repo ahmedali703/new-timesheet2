@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, ChangeEvent } from 'react';
+import { useTaskUpdates } from '@/lib/contexts/task-context';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +28,7 @@ interface JiraTasksProps {
 }
 
 export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
+  const { notifyTaskAdded } = useTaskUpdates();
   const [tasks, setTasks] = useState<JiraTask[]>([]);
   const [filteredTasks, setFilteredTasks] = useState<JiraTask[]>([]);
   const [loading, setLoading] = useState(true);
@@ -143,6 +145,9 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
       
       // Call the parent handler
       onSelectTaskForTimesheet(task);
+      
+      // Notify the task context about the new task (default to 1 hour)
+      notifyTaskAdded(1);
     }
   };
   

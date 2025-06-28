@@ -23,6 +23,7 @@ import { WeekOverview } from './week-overview';
 import { PaymentHistory } from './payment-history';
 import { JiraSection } from '@/components/jira/jira-section';
 import { JiraTask } from '@/components/jira/jira-tasks';
+import { TaskProvider } from '@/lib/contexts/task-context';
 
 interface Task {
   id: string;
@@ -112,16 +113,17 @@ export function DeveloperDashboard() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold tracking-tight">Developer Dashboard</h2>
-        <Button onClick={() => setShowTaskForm(true)} size="sm">
-          <Plus className="mr-2 h-4 w-4" /> Add Task
-        </Button>
-      </div>
-      
-      {/* Week Overview Component */}
-      <WeekOverview />
+    <TaskProvider>
+      <div className="space-y-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-3xl font-bold tracking-tight">Developer Dashboard</h2>
+          <Button onClick={() => setShowTaskForm(true)} size="sm">
+            <Plus className="mr-2 h-4 w-4" /> Add Task
+          </Button>
+        </div>
+        
+        {/* Week Overview Component */}
+        <WeekOverview />
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -268,5 +270,6 @@ export function DeveloperDashboard() {
         />
       )}
     </div>
+    </TaskProvider>
   );
 }

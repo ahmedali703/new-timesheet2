@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTaskUpdates } from '@/lib/contexts/task-context';
 import { format } from 'date-fns';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -32,6 +33,7 @@ interface WeekStatus {
 
 export function WeekOverview() {
   const { toast } = useToast();
+  const { lastTaskUpdate } = useTaskUpdates();
   const [loading, setLoading] = useState(true);
   const [weekStatus, setWeekStatus] = useState<WeekStatus | null>(null);
   const [progressPercentage, setProgressPercentage] = useState(0);
@@ -40,6 +42,14 @@ export function WeekOverview() {
     fetchWeekStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
+  // Re-fetch week status whenever a task is added or status changes
+  useEffect(() => {
+    if (lastTaskUpdate) {
+      fetchWeekStatus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastTaskUpdate]);
 
   useEffect(() => {
     if (weekStatus) {
