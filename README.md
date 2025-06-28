@@ -1,6 +1,6 @@
 # MyQuery.AI Freelancer Timesheet
 
-A comprehensive timesheet management application built for freelancers to track time spent on projects, manage clients, and generate reports.
+A comprehensive timesheet management application built for freelancers to track time spent on projects, manage clients, and generate reports..
 
 ## Features
 

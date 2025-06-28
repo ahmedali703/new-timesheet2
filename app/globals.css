@@ -3,79 +3,47 @@
 @tailwind utilities;
 
 :root {
-  /* Modern Blue Theme */
-  --background: 250 250 255;
-  --foreground: 15 23 42;
-  --card: 255 255 255;
-  --card-foreground: 15 23 42;
-  --popover: 255 255 255;
-  --popover-foreground: 15 23 42;
-  --primary: 59 130 246;
-  --primary-foreground: 248 250 252;
-  --secondary: 241 245 249;
-  --secondary-foreground: 51 65 85;
-  --muted: 248 250 252;
-  --muted-foreground: 100 116 139;
-  --accent: 239 246 255;
-  --accent-foreground: 30 64 175;
-  --destructive: 239 68 68;
-  --destructive-foreground: 248 250 252;
-  --border: 226 232 240;
-  --input: 241 245 249;
-  --ring: 59 130 246;
-  --radius: 0.75rem;
-  --chart-1: 59 130 246;
-  --chart-2: 16 185 129;
-  --chart-3: 249 115 22;
-  --chart-4: 239 68 68;
-  --chart-5: 168 85 247;
-  --gradient-start: 99 102 241;
-  --gradient-end: 59 130 246;
-  --success: 16 185 129;
-  --warning: 249 115 22;
-  --info: 14 165 233;
+  /* Windows Dark Mode Theme */
+  --background: 18 18 18;
+  --foreground: 255 255 255;
+  --card: 32 32 32;
+  --card-foreground: 255 255 255;
+  --popover: 32 32 32;
+  --popover-foreground: 255 255 255;
+  --primary: 0 120 215;
+  --primary-foreground: 255 255 255;
+  --secondary: 45 45 45;
+  --secondary-foreground: 255 255 255;
+  --muted: 28 28 28;
+  --muted-foreground: 160 160 160;
+  --accent: 45 45 45;
+  --accent-foreground: 255 255 255;
+  --destructive: 196 43 28;
+  --destructive-foreground: 255 255 255;
+  --border: 64 64 64;
+  --input: 45 45 45;
+  --ring: 0 120 215;
+  --radius: 0.5rem;
+  --chart-1: 0 120 215;
+  --chart-2: 16 124 16;
+  --chart-3: 255 140 0;
+  --chart-4: 196 43 28;
+  --chart-5: 136 23 152;
+  --gradient-start: 0 120 215;
+  --gradient-end: 16 124 206;
+  --success: 16 124 16;
+  --warning: 255 140 0;
+  --info: 0 120 215;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: 2 6 23;
-    --foreground: 248 250 252;
-    --card: 15 23 42;
-    --card-foreground: 248 250 252;
-    --popover: 15 23 42;
-    --popover-foreground: 248 250 252;
-    --primary: 59 130 246;
-    --primary-foreground: 15 23 42;
-    --secondary: 30 41 59;
-    --secondary-foreground: 203 213 225;
-    --muted: 30 41 59;
-    --muted-foreground: 148 163 184;
-    --accent: 30 58 138;
-    --accent-foreground: 219 234 254;
-    --destructive: 239 68 68;
-    --destructive-foreground: 248 250 252;
-    --border: 30 41 59;
-    --input: 30 41 59;
-    --ring: 59 130 246;
-    --gradient-start: 99 102 241;
-    --gradient-end: 59 130 246;
-    --success: 16 185 129;
-    --warning: 249 115 22;
-    --info: 14 165 233;
-  }
-}
 
-/* Enhanced body styling with gradient background */
+
+/* Windows Dark Mode Body Styling */
 body {
-  @apply bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 text-foreground;
+  @apply bg-background text-foreground;
   min-height: 100vh;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    @apply bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950;
-  }
+  background: rgb(18, 18, 18);
 }
 
 @layer base {
@@ -116,8 +84,8 @@ body {
   }
   
   .btn-secondary {
-    @apply bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 px-6 
-           rounded-xl border border-gray-200 shadow-sm hover:shadow-md 
+    @apply bg-gray-700 hover:bg-gray-600 text-white font-medium py-2.5 px-6 
+           rounded-xl border border-gray-600 shadow-sm hover:shadow-md 
            transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0;
   }
   
@@ -142,51 +110,57 @@ body {
            hover:-translate-y-0.5 active:translate-y-0 border-0;
   }
   
-  /* Enhanced Card Styles */
+  /* Enhanced Card Styles - Dark Mode */
   .card-enhanced {
-    @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-xl shadow-gray-900/5 
-           rounded-2xl hover:shadow-2xl hover:shadow-gray-900/10 transition-all duration-300 
+    @apply bg-gray-800/80 backdrop-blur-sm border border-gray-700/50 shadow-xl shadow-black/20 
+           rounded-2xl hover:shadow-2xl hover:shadow-black/30 transition-all duration-300 
            hover:-translate-y-1;
   }
   
   .card-gradient {
-    @apply bg-gradient-to-br from-white via-white to-blue-50/30 
-           border border-blue-100/50 shadow-xl shadow-blue-900/5 
-           rounded-2xl hover:shadow-2xl hover:shadow-blue-900/10 
+    @apply bg-gradient-to-br from-gray-800 via-gray-800 to-gray-700/50 
+           border border-gray-600/50 shadow-xl shadow-black/20 
+           rounded-2xl hover:shadow-2xl hover:shadow-black/30 
            transition-all duration-300 hover:-translate-y-1;
   }
   
-  /* Status badges */
+  /* Status badges - Dark Mode */
   .status-approved {
-    @apply bg-gradient-to-r from-emerald-100 to-emerald-50 text-emerald-800 
-           border border-emerald-200 font-medium px-3 py-1 rounded-full text-sm;
+    @apply bg-gradient-to-r from-emerald-900/50 to-emerald-800/50 text-emerald-200 
+           border border-emerald-700/50 font-medium px-3 py-1 rounded-full text-sm;
   }
   
   .status-pending {
-    @apply bg-gradient-to-r from-orange-100 to-orange-50 text-orange-800 
-           border border-orange-200 font-medium px-3 py-1 rounded-full text-sm;
+    @apply bg-gradient-to-r from-orange-900/50 to-orange-800/50 text-orange-200 
+           border border-orange-700/50 font-medium px-3 py-1 rounded-full text-sm;
   }
   
   .status-rejected {
-    @apply bg-gradient-to-r from-rose-100 to-rose-50 text-rose-800 
-           border border-rose-200 font-medium px-3 py-1 rounded-full text-sm;
+    @apply bg-gradient-to-r from-rose-900/50 to-rose-800/50 text-rose-200 
+           border border-rose-700/50 font-medium px-3 py-1 rounded-full text-sm;
   }
   
   .status-submitted {
-    @apply bg-gradient-to-r from-blue-100 to-blue-50 text-blue-800 
-           border border-blue-200 font-medium px-3 py-1 rounded-full text-sm;
+    @apply bg-gradient-to-r from-blue-900/50 to-blue-800/50 text-blue-200 
+           border border-blue-700/50 font-medium px-3 py-1 rounded-full text-sm;
   }
   
-  /* Enhanced input styles */
+  /* Enhanced input styles - Dark Mode */
   .input-enhanced {
-    @apply bg-white/50 backdrop-blur-sm border border-gray-200/50 
-           focus:border-blue-400 focus:ring-4 focus:ring-blue-100 
-           rounded-xl transition-all duration-200;
+    @apply bg-gray-800/50 backdrop-blur-sm border border-gray-600/50 
+           focus:border-blue-400 focus:ring-4 focus:ring-blue-500/20 
+           rounded-xl transition-all duration-200 text-white;
   }
   
-  /* Glassmorphism effect */
+  /* Dark mode glassmorphism effects */
   .glass {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+    @apply backdrop-blur-sm bg-white/5 border border-white/10;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-strong {
+    @apply backdrop-blur-md bg-white/10 border border-white/20;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
   }
   
   /* Custom animations */
