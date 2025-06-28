@@ -18,7 +18,7 @@ export function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
               <Clock className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">TimeTracker</span>
+              <span className="text-xl font-bold text-gray-900">MyQuery TimeTracker</span>
             </Link>
           </div>
 
@@ -31,15 +31,6 @@ export function Navbar() {
               </span>
             </div>
 
-
-            {session.user?.role === 'admin' && (
-              <Link href="/admin">
-                <Button variant="outline" size="sm">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Admin
-                </Button>
-              </Link>
-            )}
 
             <Button
               variant="outline"
