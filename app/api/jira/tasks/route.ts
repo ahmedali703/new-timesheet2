@@ -6,7 +6,7 @@ import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { fetchJiraTasks, getSharedJiraCredentials } from '@/lib/jira-client';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -49,15 +49,32 @@ export async function GET() {
 
       // Use the jira-client utility to fetch tasks with shared authentication
       try {
-        const jiraTasks = await fetchJiraTasks(userEmail);
+        // Get pagination parameters from URL
+        const url = new URL(request.url);
+        const page = parseInt(url.searchParams.get('page') || '1');
+        const pageSize = parseInt(url.searchParams.get('pageSize') || '10');
+        
+        // Calculate startAt index based on page number (0-indexed for Jira API)
+        const startAt = (page - 1) * pageSize;
+        
+        // Fetch paginated tasks
+        const jiraTasksResponse = await fetchJiraTasks(userEmail, startAt, pageSize);
 
         return NextResponse.json({ 
-          tasks: jiraTasks,
+          tasks: jiraTasksResponse.tasks,
           hasJiraIntegration: true,
           jiraUrl: jiraUrl,
           email: userEmail,
+          pagination: {
+            page,
+            pageSize,
+            total: jiraTasksResponse.total,
+            totalPages: Math.ceil(jiraTasksResponse.total / pageSize),
+            hasMore: jiraTasksResponse.hasMore
+          },
           debugInfo: {
-            numTasksFound: jiraTasks.length,
+            numTasksFound: jiraTasksResponse.tasks.length,
+            totalAvailable: jiraTasksResponse.total,
             timestamp: new Date().toISOString()
           }
         });

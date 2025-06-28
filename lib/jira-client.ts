@@ -16,17 +16,29 @@ export interface JiraTask {
   updated: string;
 }
 
+export interface JiraTaskResponse {
+  tasks: JiraTask[];
+  total: number;
+  startAt: number;
+  maxResults: number;
+  hasMore: boolean;
+}
+
 /**
  * Fetch open tasks for a user from Jira using shared API token
  * @param email - User's email to find their assigned tasks
+ * @param startAt - Starting index for pagination
+ * @param maxResults - Maximum number of results to return
  * @param apiToken - Optional Jira API token, falls back to env if not provided
  * @param jiraUrl - Optional Jira URL, falls back to env if not provided
  */
 export async function fetchJiraTasks(
   email: string,
+  startAt: number = 0,
+  maxResults: number = 10,
   apiToken?: string, 
   jiraUrl?: string
-): Promise<JiraTask[]> {
+): Promise<JiraTaskResponse> {
   try {
     // Use provided credentials or fall back to environment variables
     const token = apiToken || process.env.JIRA_API_TOKEN;
@@ -54,7 +66,7 @@ export async function fetchJiraTasks(
     
     console.log(`Searching for Jira tasks with query: ${decodeURIComponent(jqlQuery)}`);
     
-    const response = await fetch(`${baseUrl}/rest/api/2/search?jql=${jqlQuery}&fields=summary,key,status,assignee,updated`, {
+    const response = await fetch(`${baseUrl}/rest/api/2/search?jql=${jqlQuery}&startAt=${startAt}&maxResults=${maxResults}&fields=summary,key,status,assignee,updated`, {
       method: 'GET',
       headers: {
         'Authorization': `Basic ${authToken}`,
@@ -74,11 +86,12 @@ export async function fetchJiraTasks(
       console.log('No issues found. Debug info:', {
         totalIssues: data.total,
         maxResults: data.maxResults,
+        startAt: data.startAt,
         jiraUrl: baseUrl
       });
     }
     
-    return (data.issues || []).map((issue: any) => ({
+    const tasks = (data.issues || []).map((issue: any) => ({
       id: issue.id,
       key: issue.key,
       summary: issue.fields.summary,
@@ -89,6 +102,14 @@ export async function fetchJiraTasks(
       } : undefined,
       updated: issue.fields.updated
     }));
+    
+    return {
+      tasks,
+      total: data.total || 0,
+      startAt: data.startAt || 0,
+      maxResults: data.maxResults || 10,
+      hasMore: (data.startAt + data.maxResults) < data.total
+    };
   } catch (error) {
     console.error('Error fetching Jira tasks:', error);
     throw new Error('Failed to fetch tasks from Jira');

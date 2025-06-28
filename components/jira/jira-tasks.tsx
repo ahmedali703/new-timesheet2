@@ -25,17 +25,23 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   const [jiraBaseUrl, setJiraBaseUrl] = useState('');
   const [debugInfo, setDebugInfo] = useState<any>(null);
   const [showDebug, setShowDebug] = useState(false);
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [totalTasks, setTotalTasks] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
     fetchJiraTasks();
-  }, []);
+  }, [page, pageSize]);
 
   const fetchJiraTasks = async () => {
     setLoading(true);
     setError(null);
     
     try {
-      const response = await fetch('/api/jira/tasks');
+      const response = await fetch(`/api/jira/tasks?page=${page}&pageSize=${pageSize}`);
       const data = await response.json();
       
       if (!response.ok) {
@@ -49,6 +55,13 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
         setTasks(data.tasks);
         if (data.jiraUrl) {
           setJiraBaseUrl(data.jiraUrl);
+        }
+        
+        // Update pagination state
+        if (data.pagination) {
+          setTotalTasks(data.pagination.total);
+          setTotalPages(data.pagination.totalPages);
+          setHasMore(data.pagination.hasMore);
         }
       } else if (!data.hasJiraIntegration) {
         setError('Please connect your account to Jira first.');
@@ -183,6 +196,33 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        
+        {/* Pagination Controls */}
+        {tasks.length > 0 && (
+          <div className="mt-6 flex items-center justify-between">
+            <div className="text-sm text-gray-500">
+              Showing {tasks.length} of {totalTasks} tasks - Page {page} of {totalPages}
+            </div>
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1 || loading}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => p + 1)}
+                disabled={!hasMore || loading}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         )}
       </CardContent>
