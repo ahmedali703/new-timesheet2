@@ -28,7 +28,7 @@ interface JiraTasksProps {
 }
 
 export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
-  const { notifyTaskAdded } = useTaskUpdates();
+  const { notifyTaskAdded, notifyTasksUpdated } = useTaskUpdates();
   const [tasks, setTasks] = useState<JiraTask[]>([]);
   const [filteredTasks, setFilteredTasks] = useState<JiraTask[]>([]);
   const [loading, setLoading] = useState(true);
@@ -175,6 +175,9 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
       
       // Notify the task context about the new task (default to 1 hour)
       notifyTaskAdded(1);
+      
+      // Also notify of general tasks update to ensure all components refresh
+      notifyTasksUpdated();
     }
   };
   

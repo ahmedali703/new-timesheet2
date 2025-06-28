@@ -23,7 +23,15 @@ import { WeekOverview } from './week-overview';
 import { PaymentHistory } from './payment-history';
 import { JiraSection } from '@/components/jira/jira-section';
 import { JiraTask } from '@/components/jira/jira-tasks';
-import { TaskProvider } from '@/lib/contexts/task-context';
+import { TaskProvider, useTaskUpdates } from '@/lib/contexts/task-context';
+
+export function DeveloperDashboard() {
+  return (
+    <TaskProvider>
+      <DashboardContent />
+    </TaskProvider>
+  );
+}
 
 interface Task {
   id: string;
@@ -42,8 +50,9 @@ interface WeekSummary {
   approvedPayout: number;
 }
 
-export function DeveloperDashboard() {
+function DashboardContent() {
   const { data: session } = useSession() as { data: Session | null };
+  const { notifyTasksUpdated } = useTaskUpdates();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [weekSummary, setWeekSummary] = useState<WeekSummary>({
     totalHours: 0,
@@ -67,6 +76,9 @@ export function DeveloperDashboard() {
         const data = await response.json();
         setTasks(data.tasks);
         setWeekSummary(data.summary);
+        
+        // Notify the context that tasks have been updated
+        notifyTasksUpdated();
       }
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -113,8 +125,7 @@ export function DeveloperDashboard() {
   }
 
   return (
-    <TaskProvider>
-      <div className="space-y-8">
+    <div className="space-y-8">
         <div className="flex justify-between items-center">
           <h2 className="text-3xl font-bold tracking-tight">Developer Dashboard</h2>
           <Button onClick={() => setShowTaskForm(true)} size="sm">
@@ -270,6 +281,5 @@ export function DeveloperDashboard() {
         />
       )}
     </div>
-    </TaskProvider>
   );
 }

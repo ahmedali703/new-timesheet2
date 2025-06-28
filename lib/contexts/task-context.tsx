@@ -6,6 +6,7 @@ interface TaskContextType {
   lastTaskUpdate: Date | null;
   notifyTaskAdded: (hours: number) => void;
   notifyTaskStatusChanged: () => void;
+  notifyTasksUpdated: () => void;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -20,12 +21,17 @@ export function TaskProvider({ children }: { children: ReactNode }) {
   const notifyTaskStatusChanged = () => {
     setLastTaskUpdate(new Date());
   };
+  
+  const notifyTasksUpdated = () => {
+    setLastTaskUpdate(new Date());
+  };
 
   return (
     <TaskContext.Provider value={{ 
       lastTaskUpdate,
       notifyTaskAdded,
-      notifyTaskStatusChanged
+      notifyTaskStatusChanged,
+      notifyTasksUpdated
     }}>
       {children}
     </TaskContext.Provider>

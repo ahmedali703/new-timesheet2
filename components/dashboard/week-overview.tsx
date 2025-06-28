@@ -43,13 +43,24 @@ export function WeekOverview() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
-  // Re-fetch week status whenever a task is added or status changes
+  // Re-fetch week status whenever ANY task-related changes happen
+  // This includes adding/deleting tasks, approvals, or any timesheet changes
   useEffect(() => {
     if (lastTaskUpdate) {
       fetchWeekStatus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastTaskUpdate]);
+  
+  // Poll for updates every 30 seconds to catch changes made from other clients
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchWeekStatus();
+    }, 30000); // 30 seconds
+    
+    return () => clearInterval(intervalId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (weekStatus) {
