@@ -15,8 +15,7 @@ import {
   AlertCircle, 
   Link, 
   ListChecks, 
-  FileText,
-  RefreshCw
+  FileText
 } from 'lucide-react';
 import { TaskForm } from '@/components/forms/task-form';
 import { formatCurrency } from '@/lib/utils';
@@ -24,7 +23,6 @@ import { WeekOverview } from './week-overview';
 import { PaymentHistory } from './payment-history';
 import { JiraSection } from '@/components/jira/jira-section';
 import { JiraTask } from '@/components/jira/jira-tasks';
-import { useToast } from '@/components/ui/use-toast';
 
 interface Task {
   id: string;
@@ -45,7 +43,6 @@ interface WeekSummary {
 
 export function DeveloperDashboard() {
   const { data: session } = useSession() as { data: Session | null };
-  const { toast } = useToast();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [weekSummary, setWeekSummary] = useState<WeekSummary>({
     totalHours: 0,
@@ -56,8 +53,6 @@ export function DeveloperDashboard() {
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [selectedJiraTask, setSelectedJiraTask] = useState<JiraTask | null>(null);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [activeTab, setActiveTab] = useState('tasks');
 
   useEffect(() => {
     fetchTasks();
@@ -74,30 +69,15 @@ export function DeveloperDashboard() {
       }
     } catch (error) {
       console.error('Error fetching tasks:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load tasks",
-        variant: "destructive"
-      });
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
-  };
-
-  const handleRefresh = () => {
-    setRefreshing(true);
-    fetchTasks();
   };
 
   const handleTaskSubmitted = () => {
     setShowTaskForm(false);
     setSelectedJiraTask(null);
     fetchTasks();
-    toast({
-      title: "Success",
-      description: "Task submitted successfully",
-    });
   };
   
   const handleJiraTaskSelected = (task: JiraTask) => {
@@ -128,33 +108,16 @@ export function DeveloperDashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <RefreshCw className="h-8 w-8 animate-spin text-gray-400 mx-auto mb-2" />
-          <p className="text-gray-500">Loading dashboard...</p>
-        </div>
-      </div>
-    );
+    return <div className="flex justify-center py-8">Loading...</div>;
   }
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Developer Dashboard</h2>
-          <p className="text-muted-foreground">Track your tasks, hours, and payments</p>
-        </div>
-        <div className="flex gap-2">
-          <Button onClick={handleRefresh} size="sm" variant="outline" disabled={refreshing}>
-            <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh
-          </Button>
-          <Button onClick={() => setShowTaskForm(true)} size="sm">
-            <Plus className="mr-2 h-4 w-4" /> Add Task
-          </Button>
-        </div>
+        <h2 className="text-3xl font-bold tracking-tight">Developer Dashboard</h2>
+        <Button onClick={() => setShowTaskForm(true)} size="sm">
+          <Plus className="mr-2 h-4 w-4" /> Add Task
+        </Button>
       </div>
       
       {/* Week Overview Component */}
@@ -207,9 +170,9 @@ export function DeveloperDashboard() {
         </Card>
       </div>
 
-      {/* Tabs Section */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-        <TabsList className="grid w-full grid-cols-3">
+      {/* Tabs Section - Using proper shadcn/ui Tabs */}
+      <Tabs defaultValue="tasks" className="mt-8">
+        <TabsList className="w-full justify-start">
           <TabsTrigger value="tasks" className="flex items-center gap-2">
             <ListChecks className="h-4 w-4" />
             My Tasks
@@ -233,46 +196,33 @@ export function DeveloperDashboard() {
             </CardHeader>
             <CardContent>
               {tasks.length === 0 ? (
-                <div className="text-center py-12">
-                  <ListChecks className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 mb-4">No tasks submitted yet</p>
-                  <Button onClick={() => setShowTaskForm(true)} variant="outline" size="sm">
-                    <Plus className="mr-2 h-4 w-4" /> Add Your First Task
-                  </Button>
+                <div className="text-center py-8 text-gray-500">
+                  No tasks submitted yet. Click "Add Task" to get started.
                 </div>
               ) : (
                 <div className="space-y-4">
                   {tasks.map((task) => (
-                    <div key={task.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                    <div key={task.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center space-x-2 mb-2">
                             {getStatusIcon(task.status)}
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
                               {task.status}
                             </span>
                             {task.jiraTaskKey && (
-                              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
+                              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
                                 {task.jiraTaskKey}
                               </span>
                             )}
                           </div>
                           <h3 className="font-medium text-gray-900 mb-1">{task.description}</h3>
-                          <div className="flex items-center gap-4 text-sm text-gray-500">
-                            <span className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {task.hours} hours
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <DollarSign className="h-3 w-3" />
-                              {formatCurrency(Number(task.hours) * Number(session?.user?.hourlyRate || 0))}
-                            </span>
-                          </div>
+                          <p className="text-sm text-gray-500">
+                            {task.hours} hours • {formatCurrency(Number(task.hours) * Number(session?.user?.hourlyRate || 0))}
+                          </p>
                           {task.adminComment && (
-                            <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
-                              <p className="text-sm text-amber-800">
-                                <strong>Admin feedback:</strong> {task.adminComment}
-                              </p>
+                            <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
+                              <strong>Admin feedback:</strong> {task.adminComment}
                             </div>
                           )}
                         </div>
@@ -287,14 +237,11 @@ export function DeveloperDashboard() {
 
         {/* Jira Integration Tab */}
         <TabsContent value="jira" className="mt-6">
+          <div className="mb-2 text-sm text-gray-500">
+            Connect your Jira account to view and select tasks when logging time
+          </div>
           <Card>
-            <CardHeader>
-              <CardTitle>Jira Integration</CardTitle>
-              <CardDescription>
-                Connect your Jira account to import tasks and track time seamlessly
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               <JiraSection 
                 onConnect={() => fetchTasks()} 
                 onSelectTaskForTimesheet={handleJiraTaskSelected} 
