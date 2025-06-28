@@ -40,13 +40,14 @@ interface WeeklyHolidays {
 }
 
 const DAYS_OF_WEEK = [
-  { key: 'sunday', label: 'الأحد', value: 0 },
-  { key: 'monday', label: 'الإثنين', value: 1 },
-  { key: 'tuesday', label: 'الثلاثاء', value: 2 },
-  { key: 'wednesday', label: 'الأربعاء', value: 3 },
-  { key: 'thursday', label: 'الخميس', value: 4 },
-  { key: 'friday', label: 'الجمعة', value: 5 },
-  { key: 'saturday', label: 'السبت', value: 6 },
+{ key: 'sunday', label: 'Sunday', value: 0 },
+{ key: 'monday', label: 'Monday', value: 1 },
+{ key: 'tuesday', label: 'Tuesday', value: 2 },
+{ key: 'wednesday', label: 'Wednesday', value: 3 },
+{ key: 'thursday', label: 'Thursday', value: 4 },
+{ key: 'friday', label: 'Friday', value: 5 },
+{ key: 'saturday', label: 'Saturday', value: 6 },
+
 ];
 
 export function WeekManagement() {
