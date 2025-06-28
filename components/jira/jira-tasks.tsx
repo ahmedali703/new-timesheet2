@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Loader2, ExternalLink, AlertCircle, Bug, Plus, CheckCircle } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 
@@ -27,11 +28,14 @@ interface JiraTasksProps {
 
 export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   const [tasks, setTasks] = useState<JiraTask[]>([]);
+  const [filteredTasks, setFilteredTasks] = useState<JiraTask[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [jiraBaseUrl, setJiraBaseUrl] = useState('');
   const [debugInfo, setDebugInfo] = useState<any>(null);
   const [showDebug, setShowDebug] = useState(false);
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
   // Pagination state
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
@@ -46,6 +50,20 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
     fetchJiraTasks();
     fetchTimesheetEntries();
   }, [page, pageSize]);
+  
+  // Filter tasks when search query changes or tasks are loaded
+  useEffect(() => {
+    if (searchQuery.trim() === '') {
+      setFilteredTasks(tasks);
+    } else {
+      const query = searchQuery.toLowerCase();
+      setFilteredTasks(tasks.filter(task => 
+        task.key.toLowerCase().includes(query) || 
+        task.summary.toLowerCase().includes(query) ||
+        task.status.toLowerCase().includes(query)
+      ));
+    }
+  }, [searchQuery, tasks]);
   
   // Fetch timesheet entries to check which Jira tasks have already been added
   const fetchTimesheetEntries = async () => {
@@ -79,6 +97,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
       setDebugInfo(data);
       
       if (data.hasJiraIntegration && Array.isArray(data.tasks)) {
+        // Sort tasks to match Jira's default order (already done on server side by updated DESC)
         setTasks(data.tasks);
         if (data.jiraUrl) {
           setJiraBaseUrl(data.jiraUrl);
@@ -111,9 +130,19 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   // Handler for selecting a task to add to the timesheet
   const handleSelectForTimesheet = (task: JiraTask) => {
     if (onSelectTaskForTimesheet) {
+      // Update local state immediately to show the task as added (pending)
+      const newEntry: TimesheetEntry = {
+        id: `temp-${task.id}`,
+        jiraTaskId: task.id,
+        jiraTaskKey: task.key,
+        status: 'pending'
+      };
+      
+      // Add the new entry to the timesheetEntries state
+      setTimesheetEntries(prev => [...prev, newEntry]);
+      
+      // Call the parent handler
       onSelectTaskForTimesheet(task);
-      // After adding to timesheet, refresh the timesheet entries
-      setTimeout(() => fetchTimesheetEntries(), 500);
     }
   };
   
@@ -164,6 +193,26 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
         </div>
       </CardHeader>
       <CardContent>
+        {/* Search Box */}
+        <div className="mb-4">
+          <div className="relative">
+            <Input
+              placeholder="Search tasks by key, summary or status"
+              className="pr-10"
+              value={searchQuery}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button 
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                onClick={() => setSearchQuery('')}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
+        
         {loading ? (
           <div className="flex justify-center py-8">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -198,7 +247,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
           </div>
         ) : (
           <div className="space-y-3">
-            {tasks.map((task) => (
+            {filteredTasks.map((task) => (
               <div 
                 key={task.id} 
                 className={`border rounded-lg p-3 transition-colors ${getTaskBackgroundColor(task.id, task.key)}`}
@@ -267,10 +316,13 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
         )}
         
         {/* Pagination Controls */}
-        {tasks.length > 0 && (
+        {filteredTasks.length > 0 && (
           <div className="mt-6 flex items-center justify-between">
             <div className="text-sm text-gray-500">
-              Showing {tasks.length} of {totalTasks} tasks - Page {page} of {totalPages}
+              {searchQuery ? 
+                `Showing ${filteredTasks.length} filtered results` : 
+                `Showing ${tasks.length} of ${totalTasks} tasks - Page ${page} of ${totalPages}`
+              }
             </div>
             <div className="flex space-x-2">
               <Button
