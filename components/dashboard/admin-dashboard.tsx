@@ -200,21 +200,21 @@ export function AdminDashboard() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-900 mb-1">${stats.totalCost}</div>
-                <p className="text-sm text-blue-600/70 font-medium">Weekly budget</p>
+                <div className="text-3xl font-bold text-white mb-1">${stats.totalCost}</div>
+                <p className="text-sm text-blue-400/80 font-medium">Weekly budget</p>
               </CardContent>
             </Card>
 
             <Card className="card-gradient hover:scale-105 transition-transform duration-200">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-semibold text-gray-700">Pending Tasks</CardTitle>
-                <div className="p-2 bg-orange-100 rounded-full">
-                  <AlertCircle className="h-5 w-5 text-orange-600" />
+                <CardTitle className="text-sm font-semibold text-gray-200">Pending Tasks</CardTitle>
+                <div className="p-2 bg-orange-900/50 rounded-full">
+                  <AlertCircle className="h-5 w-5 text-orange-300" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-900 mb-1">{stats.pendingTasks}</div>
-                <p className="text-sm text-blue-600/70 font-medium">Awaiting review</p>
+                <div className="text-3xl font-bold text-white mb-1">{stats.pendingTasks}</div>
+                <p className="text-sm text-blue-400/80 font-medium">Awaiting review</p>
               </CardContent>
             </Card>
           </div>

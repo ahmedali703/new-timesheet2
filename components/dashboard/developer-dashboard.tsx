@@ -169,11 +169,11 @@ function DashboardContent() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'approved':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-900/50 text-green-200';
       case 'rejected':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-900/50 text-red-200';
       default:
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-orange-900/50 text-orange-200';
     }
   };
 
