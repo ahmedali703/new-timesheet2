@@ -139,7 +139,7 @@ export function EnhancedDeveloperDashboard() {
           <h2 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600">
             Developer Dashboard
           </h2>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-300 mt-1">
             Manage your tasks and track your progress
           </p>
         </div>
@@ -157,7 +157,7 @@ export function EnhancedDeveloperDashboard() {
           <Button 
             onClick={() => setShowTaskForm(true)} 
             size="sm"
-            className="transition-all hover:scale-105 hover:shadow-md bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700"
+            className="transition-all hover:scale-105 hover:shadow-md bg-gray-800/90 border-gray-700"
           >
             <Plus className="mr-2 h-4 w-4" /> Add Task
           </Button>
@@ -242,8 +242,8 @@ export function EnhancedDeveloperDashboard() {
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">My Tasks</h2>
-          <div className="text-sm text-gray-500">
-            <Calendar className="inline h-4 w-4 mr-1 text-gray-400" /> This Week
+          <div className="text-sm text-gray-300">
+            <Calendar className="inline h-4 w-4 mr-1 text-gray-300" /> This Week
           </div>
         </div>
         

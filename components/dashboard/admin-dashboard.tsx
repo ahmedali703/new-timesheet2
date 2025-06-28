@@ -49,8 +49,8 @@ export function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-16">
-        <div className="animate-spin rounded-full h-12 w-12 border-3 border-blue-200 border-t-blue-500"></div>
-        <span className="ml-4 text-lg text-blue-600/70">Loading admin dashboard...</span>
+        <div className="animate-spin rounded-full h-12 w-12 border-3 border-gray-700 border-t-blue-500"></div>
+        <span className="ml-4 text-lg text-gray-300">Loading admin dashboard...</span>
       </div>
     );
   }
@@ -58,21 +58,21 @@ export function AdminDashboard() {
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="text-center">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent mb-2">
           Admin Dashboard
         </h1>
-        <p className="text-blue-600/70 text-lg">Manage your team and projects efficiently</p>
+        <p className="text-gray-300 text-lg">Manage your team and projects efficiently</p>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-white/60 backdrop-blur-sm border border-blue-100/50 rounded-xl p-2">
+      <div className="bg-gray-900/60 backdrop-blur-sm border border-gray-800 rounded-xl p-2">
         <nav className="flex flex-wrap gap-2">
           <button
             onClick={() => setActiveTab('overview')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'overview'
-                ? 'bg-blue-500 text-white shadow-lg'
-                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
+                ? 'bg-blue-700 text-white shadow-lg'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -84,8 +84,8 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('weeks')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'weeks'
-                ? 'bg-blue-500 text-white shadow-lg'
-                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
+                ? 'bg-blue-700 text-white shadow-lg'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -97,8 +97,8 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('tasks')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'tasks'
-                ? 'bg-blue-500 text-white shadow-lg'
-                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
+                ? 'bg-blue-700 text-white shadow-lg'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -110,8 +110,8 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('payments')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'payments'
-                ? 'bg-blue-500 text-white shadow-lg'
-                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
+                ? 'bg-blue-700 text-white shadow-lg'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -123,8 +123,8 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('users')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'users'
-                ? 'bg-blue-500 text-white shadow-lg'
-                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
+                ? 'bg-blue-700 text-white shadow-lg'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -136,8 +136,8 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('schedules')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'schedules'
-                ? 'bg-blue-500 text-white shadow-lg'
-                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
+                ? 'bg-blue-700 text-white shadow-lg'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -149,8 +149,8 @@ export function AdminDashboard() {
             onClick={() => setActiveTab('invoices')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
               activeTab === 'invoices'
-                ? 'bg-blue-500 text-white shadow-lg'
-                : 'text-blue-600/70 hover:text-blue-700 hover:bg-blue-50/50'
+                ? 'bg-blue-700 text-white shadow-lg'
+                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-800/70'
             }`}
           >
             <div className="flex items-center gap-2">
@@ -166,55 +166,55 @@ export function AdminDashboard() {
         <div className="space-y-8 animate-slide-in">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="card-gradient hover:scale-105 transition-transform duration-200">
+            <Card className="bg-gray-900 border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-semibold text-gray-700">Total Developers</CardTitle>
-                <div className="p-2 bg-blue-100 rounded-full">
-                  <Users className="h-5 w-5 text-blue-600" />
+                <CardTitle className="text-sm font-semibold text-gray-200">Total Developers</CardTitle>
+                <div className="p-2 bg-blue-900/30 rounded-full border border-blue-700/30">
+                  <Users className="h-5 w-5 text-blue-400" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-900 mb-1">{stats.totalDevelopers}</div>
-                <p className="text-sm text-blue-600/70 font-medium">Active freelancers</p>
+                <div className="text-3xl font-bold text-gray-100 mb-1">{stats.totalDevelopers}</div>
+                <p className="text-sm text-gray-400 font-medium">Active freelancers</p>
               </CardContent>
             </Card>
 
-            <Card className="card-gradient hover:scale-105 transition-transform duration-200">
+            <Card className="bg-gray-900 border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-semibold text-gray-700">Total Hours</CardTitle>
-                <div className="p-2 bg-green-100 rounded-full">
-                  <Clock className="h-5 w-5 text-green-600" />
+                <CardTitle className="text-sm font-semibold text-gray-200">Total Hours</CardTitle>
+                <div className="p-2 bg-green-900/30 rounded-full border border-green-700/30">
+                  <Clock className="h-5 w-5 text-green-400" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-900 mb-1">{stats.totalHours}</div>
-                <p className="text-sm text-blue-600/70 font-medium">This week</p>
+                <div className="text-3xl font-bold text-gray-100 mb-1">{stats.totalHours}</div>
+                <p className="text-sm text-gray-400 font-medium">This week</p>
               </CardContent>
             </Card>
 
-            <Card className="card-gradient hover:scale-105 transition-transform duration-200">
+            <Card className="bg-gray-900 border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-semibold text-gray-700">Total Cost</CardTitle>
-                <div className="p-2 bg-purple-100 rounded-full">
-                  <DollarSign className="h-5 w-5 text-purple-600" />
+                <CardTitle className="text-sm font-semibold text-gray-200">Total Cost</CardTitle>
+                <div className="p-2 bg-purple-900/30 rounded-full border border-purple-700/30">
+                  <DollarSign className="h-5 w-5 text-purple-400" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-white mb-1">${stats.totalCost}</div>
-                <p className="text-sm text-blue-400/80 font-medium">Weekly budget</p>
+                <div className="text-3xl font-bold text-gray-100 mb-1">${stats.totalCost}</div>
+                <p className="text-sm text-gray-400 font-medium">Weekly budget</p>
               </CardContent>
             </Card>
 
-            <Card className="card-gradient hover:scale-105 transition-transform duration-200">
+            <Card className="bg-gray-900 border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-semibold text-gray-200">Pending Tasks</CardTitle>
-                <div className="p-2 bg-orange-900/50 rounded-full">
-                  <AlertCircle className="h-5 w-5 text-orange-300" />
+                <div className="p-2 bg-orange-900/30 rounded-full border border-orange-700/30">
+                  <AlertCircle className="h-5 w-5 text-orange-400" />
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-white mb-1">{stats.pendingTasks}</div>
-                <p className="text-sm text-blue-400/80 font-medium">Awaiting review</p>
+                <div className="text-3xl font-bold text-gray-100 mb-1">{stats.pendingTasks}</div>
+                <p className="text-sm text-gray-400 font-medium">Awaiting review</p>
               </CardContent>
             </Card>
           </div>

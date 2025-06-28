@@ -100,7 +100,7 @@ export function WeekOverview() {
       <Card>
         <CardContent className="pt-6">
           <div className="flex justify-center items-center h-40">
-            <p>Loading current week information...</p>
+            <p className="text-gray-300">Loading current week information...</p>
           </div>
         </CardContent>
       </Card>
@@ -112,7 +112,7 @@ export function WeekOverview() {
       <Card>
         <CardContent className="pt-6">
           <div className="flex justify-center items-center h-40">
-            <p>No active week found. Please contact an administrator.</p>
+            <p className="text-gray-300">No active week found. Please contact an administrator.</p>
           </div>
         </CardContent>
       </Card>
@@ -133,11 +133,11 @@ export function WeekOverview() {
               {formatDate(weekStatus.startDate)} - {formatDate(weekStatus.endDate)}
               {' '}
               {weekStatus.isOpen ? (
-                <span className="inline-flex bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2">
+                <span className="inline-flex bg-green-900/50 text-green-300 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2 border border-green-700/50">
                   Active
                 </span>
               ) : (
-                <span className="inline-flex bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2">
+                <span className="inline-flex bg-red-900/50 text-red-300 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2 border border-red-700/50">
                   Closed
                 </span>
               )}
@@ -152,13 +152,13 @@ export function WeekOverview() {
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="text-sm font-medium">Hours Progress</h3>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-400">
                   {weekStatus.totalHoursWorked} of {weekStatus.totalHoursExpected} hours logged
                 </p>
               </div>
               <div className="text-xs text-right">
                 <div className="font-medium">{progressPercentage}%</div>
-                <div className="text-muted-foreground">
+                <div className="text-gray-400">
                   {weekStatus.remainingHours} hours remaining
                 </div>
               </div>
@@ -169,48 +169,48 @@ export function WeekOverview() {
           {/* Work details */}
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-start space-x-3">
-              <div className="bg-blue-100 p-2 rounded-lg">
-                <Clock3 className="h-4 w-4 text-blue-700" />
+              <div className="bg-blue-900/30 p-2 rounded-lg border border-blue-700/30">
+                <Clock3 className="h-4 w-4 text-blue-400" />
               </div>
               <div>
                 <p className="text-sm font-medium">Working Hours</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-400">
                   {weekStatus.hoursPerDay} hours/day × {weekStatus.daysPerWeek} days
                 </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="bg-green-100 p-2 rounded-lg">
-                <ClockIcon className="h-4 w-4 text-green-700" />
+              <div className="bg-green-900/30 p-2 rounded-lg border border-green-700/30">
+                <ClockIcon className="h-4 w-4 text-green-400" />
               </div>
               <div>
                 <p className="text-sm font-medium">Hourly Rate</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-400">
                   {formatCurrency(weekStatus.hourlyRate)} per hour
                 </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="bg-purple-100 p-2 rounded-lg">
-                <DollarSign className="h-4 w-4 text-purple-700" />
+              <div className="bg-purple-900/30 p-2 rounded-lg border border-purple-700/30">
+                <DollarSign className="h-4 w-4 text-purple-400" />
               </div>
               <div>
                 <p className="text-sm font-medium">Expected Earnings</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-400">
                   {formatCurrency(weekStatus.expectedEarnings)}
                 </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="bg-purple-100 p-2 rounded-lg">
-                <DollarSign className="h-4 w-4 text-purple-700" />
+              <div className="bg-purple-900/30 p-2 rounded-lg border border-purple-700/30">
+                <DollarSign className="h-4 w-4 text-purple-400" />
               </div>
               <div>
                 <p className="text-sm font-medium">Current Earnings</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-400">
                   {formatCurrency(weekStatus.actualEarnings)} ({Math.round((weekStatus.actualEarnings / weekStatus.expectedEarnings) * 100)}%)
                 </p>
               </div>

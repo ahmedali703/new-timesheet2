@@ -76,26 +76,26 @@ export function TaskTable<TData, TValue>({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="relative w-72">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-300" />
           <Input
             placeholder="Search all tasks..."
             value={globalFilter || ''}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="w-full bg-white pl-9 focus-visible:ring-blue-500"
+            className="w-full bg-gray-800 border-gray-700 text-white pl-9 focus-visible:ring-blue-500 placeholder:text-gray-400"
           />
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-gray-300">
           {table.getFilteredRowModel().rows.length} task(s) found
         </div>
       </div>
 
-      <div className="rounded-md border overflow-hidden bg-white shadow-sm">
+      <div className="rounded-md border border-gray-800 overflow-hidden bg-gray-900 shadow-md">
         <div className="relative">
           {isLoading && (
-            <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center z-10">
+            <div className="absolute inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center z-10">
               <div className="flex flex-col items-center">
                 <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
-                <span className="mt-2 text-sm text-gray-500">Loading tasks...</span>
+                <span className="mt-2 text-sm text-gray-300">Loading tasks...</span>
               </div>
             </div>
           )}
@@ -118,7 +118,7 @@ export function TaskTable<TData, TValue>({
                             header.getContext()
                           )}
                           {header.column.getCanSort() && (
-                            <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-gray-400" />
+                            <ArrowUpDown className="ml-2 h-3.5 w-3.5 text-gray-300" />
                           )}
                         </div>
                       )}
@@ -138,8 +138,8 @@ export function TaskTable<TData, TValue>({
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
                       className={cn(
-                        "transition-colors hover:bg-blue-50/50 data-[state=selected]:bg-blue-50",
-                        row.getIsSelected() && "bg-blue-50"
+                        "transition-colors hover:bg-blue-900/30 data-[state=selected]:bg-blue-900/40",
+                        row.getIsSelected() && "bg-blue-900/40"
                       )}
                     >
                       {row.getVisibleCells().map((cell) => (
@@ -153,7 +153,7 @@ export function TaskTable<TData, TValue>({
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-32 text-center">
-                    <div className="flex flex-col items-center justify-center text-gray-500">
+                    <div className="flex flex-col items-center justify-center text-gray-300">
                       <Clock className="h-8 w-8 mb-2 opacity-50" />
                       <p>No tasks found</p>
                       <p className="text-sm">Try adjusting your search or filters</p>
@@ -167,7 +167,7 @@ export function TaskTable<TData, TValue>({
 
         <div className="flex items-center justify-between p-4 border-t">
           <div className="flex items-center space-x-2">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-300">
               Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
             </p>
             <select

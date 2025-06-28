@@ -109,12 +109,12 @@ export function PaymentHistory() {
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="text-center py-12">Loading invoice history...</div>
+          <div className="text-center py-12 text-gray-300">Loading invoice history...</div>
         ) : invoices.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
-            <FileText className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-            <p className="text-lg font-medium">No invoices yet</p>
-            <p className="text-sm mt-1">
+          <div className="text-center py-12 text-gray-400">
+            <FileText className="h-12 w-12 mx-auto mb-3 text-gray-500" />
+            <p className="text-lg font-medium text-gray-200">No invoices yet</p>
+            <p className="text-sm mt-1 text-gray-400">
               Your payment history will appear here once you submit your first timesheet
             </p>
           </div>
@@ -134,15 +134,15 @@ export function PaymentHistory() {
               </TableHeader>
               <TableBody>
                 {invoices.map((invoice) => (
-                  <TableRow key={invoice.id}>
-                    <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
+                  <TableRow key={invoice.id} className="hover:bg-gray-800/50">
+                    <TableCell className="font-medium text-gray-200">{invoice.invoiceNumber}</TableCell>
                     <TableCell>
                       {formatDate(invoice.createdAt)}
                     </TableCell>
                     <TableCell>{invoice.totalHours}</TableCell>
                     <TableCell>{formatCurrency(invoice.amount)}</TableCell>
                     <TableCell>{getStatusBadge(invoice.status)}</TableCell>
-                    <TableCell>{invoice.status === 'paid' ? formatDate(invoice.updatedAt) : 'N/A'}</TableCell>
+                    <TableCell>{invoice.status === 'paid' ? formatDate(invoice.paymentDate) : 'N/A'}</TableCell>
                     <TableCell className="text-right">
                       <Button 
                         variant="outline" 
@@ -174,7 +174,7 @@ export function PaymentHistory() {
                             });
                           }
                         }}
-                        className="hover:bg-blue-50"
+                        className="hover:bg-gray-800 border-gray-700 text-gray-300"
                       >
                         <Download className="h-4 w-4 mr-1" />
                         {invoice.fileName || 'Download'}

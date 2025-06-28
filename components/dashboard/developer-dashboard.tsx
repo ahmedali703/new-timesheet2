@@ -202,7 +202,7 @@ function DashboardContent() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="card-gradient hover:scale-105 transition-transform duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">Total Hours</CardTitle>
+            <CardTitle className="text-sm font-semibold text-gray-100">Total Hours</CardTitle>
             <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl">
               <Clock className="h-4 w-4 text-white" />
             </div>
@@ -215,7 +215,7 @@ function DashboardContent() {
 
         <Card className="card-gradient hover:scale-105 transition-transform duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">Approved Hours</CardTitle>
+            <CardTitle className="text-sm font-semibold text-gray-100">Approved Hours</CardTitle>
             <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl">
               <CheckCircle className="h-4 w-4 text-white" />
             </div>
@@ -228,7 +228,7 @@ function DashboardContent() {
 
         <Card className="card-gradient hover:scale-105 transition-transform duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">Total Payout</CardTitle>
+            <CardTitle className="text-sm font-semibold text-gray-100">Total Payout</CardTitle>
             <div className="p-2 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl">
               <DollarSign className="h-4 w-4 text-white" />
             </div>
@@ -241,7 +241,7 @@ function DashboardContent() {
 
         <Card className="card-gradient hover:scale-105 transition-transform duration-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">Approved Payout</CardTitle>
+            <CardTitle className="text-sm font-semibold text-gray-100">Approved Payout</CardTitle>
             <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl">
               <DollarSign className="h-4 w-4 text-white" />
             </div>
@@ -255,7 +255,7 @@ function DashboardContent() {
 
       {/* Tabs Section - Using proper shadcn/ui Tabs */}
       <Tabs defaultValue="tasks" className="mt-8">
-        <TabsList className="bg-white/60 backdrop-blur-sm border border-blue-100/50 p-1 h-12">
+        <TabsList className="bg-gray-900/70 backdrop-blur-sm border border-gray-800 p-1 h-12">
           <TabsTrigger value="tasks" className="flex items-center gap-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200">
             <ListChecks className="h-4 w-4" />
             My Tasks
@@ -294,7 +294,7 @@ function DashboardContent() {
                       <span className="ml-3 text-blue-600/70">Loading tasks...</span>
                     </div>
                   ) : tasks.map((task) => (
-                    <div key={task.id} className="bg-white/80 backdrop-blur-sm border border-blue-100/50 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01]">
+                    <div key={task.id} className="bg-gray-900/70 backdrop-blur-sm border border-gray-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01]">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-3">
@@ -352,7 +352,7 @@ function DashboardContent() {
                     
                     {/* Pagination Controls */}
                     {taskPagination.total > 0 && (
-                      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-4">
+                      <div className="flex items-center justify-between border-t border-gray-800 bg-gray-900 px-4 py-3 sm:px-6 mt-4">
                         <div className="flex flex-1 justify-between sm:hidden">
                           <Button 
                             variant="outline" 
@@ -373,7 +373,7 @@ function DashboardContent() {
                         </div>
                         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                           <div>
-                            <p className="text-sm text-gray-700">
+                            <p className="text-sm text-gray-300">
                               Showing <span className="font-medium">{tasks.length > 0 ? (taskPage - 1) * tasksPerPage + 1 : 0}</span> to{' '}
                               <span className="font-medium">
                                 {Math.min(taskPage * tasksPerPage, taskPagination.total)}
@@ -423,7 +423,7 @@ function DashboardContent() {
 
         {/* Jira Integration Tab */}
         <TabsContent value="jira" className="mt-6">
-          <div className="mb-2 text-sm text-gray-500">
+          <div className="mb-2 text-sm text-gray-300">
             Connect your Jira account to view and select tasks when logging time
           </div>
           <Card>

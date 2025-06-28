@@ -244,7 +244,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
             />
             {searchQuery && (
               <button 
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-gray-100"
                 onClick={() => setSearchQuery('')}
               >
                 ✕
@@ -258,23 +258,23 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : error ? (
-          <div className="bg-red-50 p-4 rounded-md flex items-start space-x-2">
+          <div className="bg-red-900/30 p-4 rounded-md flex items-start space-x-2">
             <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
-            <div className="text-sm text-red-800">{error}</div>
+            <p className="text-sm text-yellow-200">{error}</p>
           </div>
         ) : tasks.length === 0 ? (
           <div className="space-y-4">
-            <div className="text-center py-4 text-gray-500">
+            <div className="text-center py-4 text-gray-300">
               No tasks are currently assigned to you in Jira.
             </div>
             
             {showDebug && debugInfo && (
-              <div className="bg-gray-50 p-4 rounded-md border">
+              <div className="bg-yellow-900/30 border-l-4 border-yellow-500 p-3 mb-4">
                 <div className="font-semibold mb-2 text-sm">Debug Information:</div>
                 <div className="text-xs font-mono overflow-auto max-h-60 whitespace-pre">
                   {JSON.stringify(debugInfo, null, 2)}
                 </div>
-                <div className="mt-3 text-xs text-gray-500">
+                <div className="mt-3 text-xs text-gray-300">
                   <p>Common issues:</p>
                   <ul className="list-disc pl-5 mt-1">
                     <li>Your email format in Jira might differ from the one in this app</li>
@@ -298,7 +298,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
                       <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-medium">
                         {task.key}
                       </span>
-                      <span className="text-xs text-gray-500">{task.status}</span>
+                      <span className="text-xs text-gray-300">{task.status}</span>
                     </div>
                     <h3 className="font-medium text-sm mt-1">{task.summary}</h3>
                   </div>
@@ -354,7 +354,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
         {/* Pagination Controls */}
         {filteredTasks.length > 0 && (
           <div className="mt-6 flex items-center justify-between">
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-300">
               {searchQuery ? 
                 `Showing ${filteredTasks.length} filtered results` : 
                 `Showing ${tasks.length} of ${totalTasks} tasks - Page ${page} of ${totalPages}`

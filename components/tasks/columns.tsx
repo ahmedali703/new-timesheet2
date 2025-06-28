@@ -40,9 +40,9 @@ export const taskColumns: ColumnDef<Task>[] = [
             )}
           </div>
           {row.original.adminComment && (
-            <div className="text-xs px-2 py-1 bg-gray-50 border border-gray-100 rounded flex items-start">
-              <MessageSquare className="h-3 w-3 mt-0.5 mr-1 text-gray-400 flex-shrink-0" />
-              <span className="text-gray-600">{row.original.adminComment}</span>
+            <div className="text-xs px-2 py-1 bg-gray-800 border border-gray-700 rounded flex items-start">
+              <MessageSquare className="h-3 w-3 mt-0.5 mr-1 text-gray-300 flex-shrink-0" />
+              <span className="text-gray-200">{row.original.adminComment}</span>
             </div>
           )}
         </div>
@@ -82,10 +82,10 @@ export const taskColumns: ColumnDef<Task>[] = [
     header: 'Created',
     cell: ({ row }) => {
       const date = row.original.createdAt;
-      if (!date) return <div className="text-gray-500 text-sm">—</div>;
+      if (!date) return <div className="text-gray-300 text-sm">—</div>;
       
       return (
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-gray-200">
           {format(new Date(date), 'MMM d, yyyy')}
         </div>
       );

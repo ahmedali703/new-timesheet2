@@ -20,10 +20,10 @@ export default function SignIn() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background animated elements */}
       <motion.div
-        className="absolute -top-24 -left-24 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
+        className="absolute -top-24 -left-24 w-64 h-64 bg-blue-700 rounded-full mix-blend-multiply filter blur-3xl opacity-20"
         animate={{
           x: [0, 30, 0],
           y: [0, 40, 0],
@@ -35,7 +35,7 @@ export default function SignIn() {
         }}
       />
       <motion.div
-        className="absolute top-1/3 -right-24 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
+        className="absolute top-1/3 -right-24 w-72 h-72 bg-blue-800 rounded-full mix-blend-multiply filter blur-3xl opacity-20"
         animate={{
           x: [0, -30, 0],
           y: [0, -40, 0],
@@ -53,7 +53,7 @@ export default function SignIn() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <Card className="w-full max-w-md shadow-xl bg-white/90 backdrop-blur-sm border-0 overflow-hidden">
+        <Card className="w-full max-w-md shadow-xl bg-gray-900/90 backdrop-blur-sm border border-gray-800/50 overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
           
           <CardHeader className="text-center pt-8">
@@ -68,8 +68,8 @@ export default function SignIn() {
                 delay: 0.3 
               }}
             >
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Clock className="h-10 w-10 text-blue-600" />
+              <div className="p-3 bg-blue-950 rounded-full">
+                <Clock className="h-10 w-10 text-blue-400" />
               </div>
             </motion.div>
             
@@ -78,8 +78,8 @@ export default function SignIn() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <CardTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600">TimeTracker</CardTitle>
-              <CardDescription className="text-gray-600 mt-2 text-base">
+              <CardTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-200">TimeTracker</CardTitle>
+              <CardDescription className="text-gray-300 mt-2 text-base">
                 Sign in to manage your freelancer timesheets
               </CardDescription>
             </motion.div>
@@ -94,7 +94,7 @@ export default function SignIn() {
             >
               <Button
                 onClick={() => signIn('google', { callbackUrl: '/' })}
-                className="w-full transition-all hover:shadow-md hover:translate-y-[-1px] bg-white hover:bg-gray-50 text-gray-800 border border-gray-200"
+                className="w-full transition-all hover:shadow-md hover:translate-y-[-1px] bg-gray-800 hover:bg-gray-700 text-white border border-gray-700"
                 size="lg"
               >
                 <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
@@ -134,7 +134,7 @@ export default function SignIn() {
             </motion.div>
           </CardContent>
           
-          <CardFooter className="px-8 py-4 bg-gray-50/50 flex justify-between items-center">
+          <CardFooter className="px-8 py-4 bg-gray-800/50 flex justify-between items-center">
             <motion.div 
               className="flex space-x-6"
               initial={{ opacity: 0 }}
@@ -143,11 +143,11 @@ export default function SignIn() {
             >
               <div className="flex items-center space-x-2">
                 <Calendar className="h-4 w-4 text-blue-500" />
-                <span className="text-xs text-gray-500">Track Time</span>
+                <span className="text-xs text-gray-300">Track Time</span>
               </div>
               <div className="flex items-center space-x-2">
                 <BarChart3 className="h-4 w-4 text-purple-500" />
-                <span className="text-xs text-gray-500">View Reports</span>
+                <span className="text-xs text-gray-300">View Reports</span>
               </div>
             </motion.div>
           </CardFooter>
