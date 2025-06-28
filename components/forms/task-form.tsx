@@ -16,7 +16,7 @@ interface JiraTask {
 interface Task {
   id: string;
   description: string;
-  hours: string;
+  hours: string | number; // Can be either string or number depending on source
   status: 'pending' | 'approved' | 'rejected';
   jiraTaskKey?: string;
   jiraTaskId?: string;
@@ -43,7 +43,8 @@ export function TaskForm({ onClose, onSubmit, selectedJiraTask, taskToEdit }: Ta
     // If editing an existing task
     if (taskToEdit) {
       setDescription(taskToEdit.description);
-      setHours(taskToEdit.hours);
+      // Convert hours to string if it's a number
+      setHours(typeof taskToEdit.hours === 'number' ? taskToEdit.hours.toString() : taskToEdit.hours);
       if (taskToEdit.jiraTaskId) {
         setSelectedJiraTaskId(taskToEdit.jiraTaskId);
       }

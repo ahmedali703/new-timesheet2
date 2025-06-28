@@ -429,9 +429,11 @@ function DashboardContent() {
           onClose={() => {
             setShowTaskForm(false);
             setSelectedJiraTask(null);
+            setTaskToEdit(null);
           }}
           onSubmit={handleTaskSubmitted}
           selectedJiraTask={selectedJiraTask}
+          taskToEdit={taskToEdit}
         />
       )}
     </div>
