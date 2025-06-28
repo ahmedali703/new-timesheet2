@@ -197,7 +197,7 @@ export function DeveloperDashboard() {
             <CardContent>
               {tasks.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  No tasks submitted yet. Click "Add Task" to get started.
+                  No tasks submitted yet. Click &quot;Add Task&quot; to get started.
                 </div>
               ) : (
                 <div className="space-y-4">
