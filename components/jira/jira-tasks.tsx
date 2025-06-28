@@ -130,6 +130,28 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   };
 
   // Handler for selecting a task to add to the timesheet
+  // Helper function to get the timesheet status for a task
+  const getTaskTimesheetStatus = (taskId: string): 'pending' | 'approved' | 'rejected' | null => {
+    const entry = timesheetEntries.find(entry => entry.jiraTaskId === taskId);
+    return entry ? entry.status as 'pending' | 'approved' | 'rejected' : null;
+  };
+  
+  // Helper to determine if a task is already added to timesheet
+  const isTaskAddedToTimesheet = (taskId: string): boolean => {
+    const entry = timesheetEntries.find(entry => entry.jiraTaskId === taskId);
+    // Only consider a task as added if it's pending or approved, not if it's rejected
+    return entry ? (entry.status === 'pending' || entry.status === 'approved') : false;
+  };
+  
+  // Get the appropriate background color based on task status
+  const getTaskBackgroundColor = (taskId: string): string => {
+    const status = getTaskTimesheetStatus(taskId);
+    if (status === 'approved') return 'bg-green-50';
+    if (status === 'pending') return 'bg-yellow-50';
+    if (status === 'rejected') return 'bg-red-50';
+    return 'hover:bg-gray-50';
+  };
+
   const handleSelectForTimesheet = (task: JiraTask) => {
     if (onSelectTaskForTimesheet) {
       // Update local state immediately to show the task as added (pending)
@@ -141,7 +163,12 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
       };
       
       // Add the new entry to the timesheetEntries state
-      setTimesheetEntries(prev => [...prev, newEntry]);
+      setTimesheetEntries(prev => {
+        // Remove any existing entries for this task (e.g., rejected ones)
+        const filteredEntries = prev.filter(entry => entry.jiraTaskId !== task.id);
+        // Add the new entry
+        return [...filteredEntries, newEntry];
+      });
       
       // Call the parent handler
       onSelectTaskForTimesheet(task);
@@ -151,23 +178,6 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
     }
   };
   
-  // Check if a task has already been added to the timesheet
-  const getTaskTimesheetStatus = (taskId: string, taskKey: string) => {
-    const entry = timesheetEntries.find(entry => 
-      (entry.jiraTaskId === taskId) || 
-      (entry.jiraTaskKey === taskKey)
-    );
-    return entry ? entry.status : null;
-  };
-  
-  // Get the appropriate background color based on task status
-  const getTaskBackgroundColor = (taskId: string, taskKey: string) => {
-    const status = getTaskTimesheetStatus(taskId, taskKey);
-    if (status === 'approved') return 'bg-green-50';
-    if (status === 'pending') return 'bg-yellow-50';
-    return 'hover:bg-gray-50';
-  };
-
   return (
     <Card className="w-full">
       <CardHeader>
@@ -255,7 +265,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
             {filteredTasks.map((task) => (
               <div 
                 key={task.id} 
-                className={`border rounded-lg p-3 transition-colors ${getTaskBackgroundColor(task.id, task.key)}`}
+                className={`border rounded-lg p-3 transition-colors ${getTaskBackgroundColor(task.id)}`}
               >
                 <div className="flex items-start justify-between">
                   <div>
@@ -283,36 +293,32 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
                         Open in Jira
                       </a>
                     </Button>
-                    {getTaskTimesheetStatus(task.id, task.key) ? (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        disabled
-                        className="whitespace-nowrap opacity-50"
-                      >
-                        {getTaskTimesheetStatus(task.id, task.key) === 'approved' ? (
-                          <>
-                            <CheckCircle className="h-3 w-3 mr-1" />
-                            Approved
-                          </>
-                        ) : (
-                          <>
-                            <Plus className="h-3 w-3 mr-1" />
-                            Added
-                          </>
-                        )}
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => handleSelectForTimesheet(task)}
-                        className="whitespace-nowrap"
-                      >
-                        <Plus className="h-3 w-3 mr-1" />
-                        Add to Timesheet
-                      </Button>
-                    )}
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="ml-auto"
+                      onClick={() => handleSelectForTimesheet(task)}
+                      disabled={isTaskAddedToTimesheet(task.id)}
+                    >
+                      {getTaskTimesheetStatus(task.id) === 'approved' ? (
+                        <>
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          Approved
+                        </>
+                      ) : getTaskTimesheetStatus(task.id) === 'pending' ? (
+                        "Added"
+                      ) : getTaskTimesheetStatus(task.id) === 'rejected' ? (
+                        <>
+                          <Plus className="h-4 w-4 mr-1" />
+                          Add Again
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-4 w-4 mr-1" />
+                          Add to Timesheet
+                        </>
+                      )}
+                    </Button>
                   </div>
                 </div>
               </div>
