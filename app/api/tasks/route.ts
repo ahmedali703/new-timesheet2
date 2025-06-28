@@ -3,9 +3,16 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { tasks, weeks, users } from '@/lib/db/schema';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, count } from 'drizzle-orm';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Get pagination parameters from query
+  const searchParams = request.nextUrl.searchParams;
+  const page = parseInt(searchParams.get('page') || '1');
+  const pageSize = parseInt(searchParams.get('pageSize') || '5');
+  
+  // Calculate offset
+  const offset = (page - 1) * pageSize;
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
@@ -21,7 +28,19 @@ export async function GET() {
       });
     }
 
-    // Get user's tasks for current week
+    // Count total tasks for pagination
+    const totalResult = await db
+      .select({ value: count() })
+      .from(tasks)
+      .where(
+        and(
+          eq(tasks.userId, session.user.id),
+          eq(tasks.weekId, currentWeek[0].id)
+        )
+      );
+    const total = totalResult[0].value;
+    
+    // Get paginated user's tasks for current week
     const userTasks = await db
       .select()
       .from(tasks)
@@ -31,7 +50,9 @@ export async function GET() {
           eq(tasks.weekId, currentWeek[0].id)
         )
       )
-      .orderBy(desc(tasks.createdAt));
+      .orderBy(desc(tasks.createdAt))
+      .limit(pageSize)
+      .offset(offset);
 
     // Get user's hourly rate
     const user = await db.select().from(users).where(eq(users.id, session.user.id)).limit(1);
@@ -46,6 +67,10 @@ export async function GET() {
     const totalPayout = totalHours * hourlyRate;
     const approvedPayout = approvedHours * hourlyRate;
 
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(total / pageSize);
+    const hasMore = page < totalPages;
+    
     return NextResponse.json({
       tasks: userTasks,
       summary: {
@@ -54,6 +79,13 @@ export async function GET() {
         totalPayout,
         approvedPayout,
       },
+      pagination: {
+        currentPage: page,
+        pageSize,
+        total,
+        totalPages,
+        hasMore
+      }
     });
   } catch (error) {
     console.error('Error fetching tasks:', error);

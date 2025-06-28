@@ -15,7 +15,9 @@ import {
   AlertCircle, 
   Link, 
   ListChecks, 
-  FileText
+  FileText,
+  Pencil,
+  Trash2
 } from 'lucide-react';
 import { TaskForm } from '@/components/forms/task-form';
 import { formatCurrency } from '@/lib/utils';
@@ -62,20 +64,32 @@ function DashboardContent() {
   });
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [selectedJiraTask, setSelectedJiraTask] = useState<JiraTask | null>(null);
+  const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
   const [loading, setLoading] = useState(true);
+  const [taskPage, setTaskPage] = useState(1);
+  const [tasksPerPage] = useState(5);
+  const [taskPagination, setTaskPagination] = useState({
+    currentPage: 1,
+    pageSize: 5,
+    total: 0,
+    totalPages: 1,
+    hasMore: false
+  });
 
   useEffect(() => {
     fetchTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchTasks = async () => {
+  const fetchTasks = async (page = taskPage) => {
     try {
-      const response = await fetch('/api/tasks');
+      setLoading(true);
+      const response = await fetch(`/api/tasks?page=${page}&pageSize=${tasksPerPage}`);
       if (response.ok) {
         const data = await response.json();
         setTasks(data.tasks);
         setWeekSummary(data.summary);
+        setTaskPagination(data.pagination);
         
         // Notify the context that tasks have been updated
         notifyTasksUpdated();
@@ -86,11 +100,54 @@ function DashboardContent() {
       setLoading(false);
     }
   };
+  
+  const handlePreviousPage = () => {
+    if (taskPage > 1) {
+      const newPage = taskPage - 1;
+      setTaskPage(newPage);
+      fetchTasks(newPage);
+    }
+  };
+  
+  const handleNextPage = () => {
+    if (taskPagination.hasMore) {
+      const newPage = taskPage + 1;
+      setTaskPage(newPage);
+      fetchTasks(newPage);
+    }
+  };
 
   const handleTaskSubmitted = () => {
     setShowTaskForm(false);
     setSelectedJiraTask(null);
+    setTaskToEdit(null);
     fetchTasks();
+  };
+  
+  const handleEditTask = (task: Task) => {
+    setTaskToEdit(task);
+    setShowTaskForm(true);
+  };
+  
+  const handleDeleteTask = async (taskId: string) => {
+    if (!confirm('Are you sure you want to delete this task?')) return;
+    
+    try {
+      const response = await fetch(`/api/tasks/${taskId}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        // Refresh tasks after delete
+        fetchTasks();
+        notifyTasksUpdated();
+      } else {
+        alert('Failed to delete task. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      alert('An error occurred while deleting the task.');
+    }
   };
   
   const handleJiraTaskSelected = (task: JiraTask) => {
@@ -214,7 +271,11 @@ function DashboardContent() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {tasks.map((task) => (
+                  {loading ? (
+                    <div className="flex justify-center items-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    </div>
+                  ) : tasks.map((task) => (
                     <div key={task.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -239,10 +300,103 @@ function DashboardContent() {
                             </div>
                           )}
                         </div>
+                        <div className="flex space-x-2 ml-4">
+                          {/* Only allow editing for pending tasks */}
+                          {task.status === 'pending' && (
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-8 w-8 text-blue-500 hover:text-blue-700 hover:bg-blue-50"
+                              onClick={() => handleEditTask(task)}
+                            >
+                              <Pencil className="h-4 w-4" />
+                              <span className="sr-only">Edit</span>
+                            </Button>
+                          )}
+                          
+                          {/* Only allow deletion for pending tasks */}
+                          {task.status === 'pending' && (
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                              onClick={() => handleDeleteTask(task.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span className="sr-only">Delete</span>
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
-                </div>
+                    
+                    {/* Pagination Controls */}
+                    {taskPagination.total > 0 && (
+                      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-4">
+                        <div className="flex flex-1 justify-between sm:hidden">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            disabled={taskPage <= 1}
+                            onClick={handlePreviousPage}
+                          >
+                            Previous
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            disabled={!taskPagination.hasMore}
+                            onClick={handleNextPage}
+                          >
+                            Next
+                          </Button>
+                        </div>
+                        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                          <div>
+                            <p className="text-sm text-gray-700">
+                              Showing <span className="font-medium">{tasks.length > 0 ? (taskPage - 1) * tasksPerPage + 1 : 0}</span> to{' '}
+                              <span className="font-medium">
+                                {Math.min(taskPage * tasksPerPage, taskPagination.total)}
+                              </span>{' '}
+                              of <span className="font-medium">{taskPagination.total}</span> tasks
+                            </p>
+                          </div>
+                          <div>
+                            <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                              <Button 
+                                variant="outline"
+                                size="icon" 
+                                className="rounded-l-md"
+                                disabled={taskPage <= 1}
+                                onClick={handlePreviousPage}
+                              >
+                                <span className="sr-only">Previous</span>
+                                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fillRule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clipRule="evenodd" />
+                                </svg>
+                              </Button>
+                              <div className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
+                                {taskPage} / {taskPagination.totalPages}
+                              </div>
+                              <Button 
+                                variant="outline"
+                                size="icon"
+                                className="rounded-r-md"
+                                disabled={!taskPagination.hasMore}
+                                onClick={handleNextPage}
+                              >
+                                <span className="sr-only">Next</span>
+                                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />
+                                </svg>
+                              </Button>
+                            </nav>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
               )}
             </CardContent>
           </Card>

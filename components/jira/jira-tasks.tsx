@@ -139,8 +139,21 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   // Helper to determine if a task is already added to timesheet
   const isTaskAddedToTimesheet = (taskId: string): boolean => {
     const entry = timesheetEntries.find(entry => entry.jiraTaskId === taskId);
-    // Only consider a task as added if it's pending or approved, not if it's rejected
-    return entry ? (entry.status === 'pending' || entry.status === 'approved') : false;
+    // Consider a task as added if it's pending or approved
+    // For rejected tasks, we're now checking if a resubmission is pending
+    if (!entry) return false;
+    
+    if (entry.status === 'pending' || entry.status === 'approved') {
+      return true;
+    }
+    
+    // Check if there's another entry for this task that's not rejected
+    // This handles the case where a task was rejected but then added again
+    const hasActiveEntry = timesheetEntries.some(
+      e => e.jiraTaskId === taskId && (e.status === 'pending' || e.status === 'approved')
+    );
+    
+    return hasActiveEntry;
   };
   
   // Get the appropriate background color based on task status
@@ -152,9 +165,9 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
     return 'hover:bg-gray-50';
   };
 
-  const handleSelectForTimesheet = (task: JiraTask) => {
+  const handleSelectForTimesheet = async (task: JiraTask) => {
     if (onSelectTaskForTimesheet) {
-      // Update local state immediately to show the task as added (pending)
+      // Create a new timesheet entry object
       const newEntry: TimesheetEntry = {
         id: `temp-${task.id}`,
         jiraTaskId: task.id,
@@ -165,12 +178,17 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
       // Add the new entry to the timesheetEntries state
       setTimesheetEntries(prev => {
         // Remove any existing entries for this task (e.g., rejected ones)
-        const filteredEntries = prev.filter(entry => entry.jiraTaskId !== task.id);
+        const filteredEntries = prev.filter(entry => 
+          // When resubmitting a rejected task, only filter out rejected entries
+          // This ensures we don't remove pending or approved entries on refresh
+          entry.jiraTaskId !== task.id || 
+          (entry.jiraTaskId === task.id && entry.status !== 'rejected')
+        );
         // Add the new entry
         return [...filteredEntries, newEntry];
       });
       
-      // Call the parent handler
+      // Call the parent handler to save to backend
       onSelectTaskForTimesheet(task);
       
       // Notify the task context about the new task (default to 1 hour)
@@ -178,6 +196,10 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
       
       // Also notify of general tasks update to ensure all components refresh
       notifyTasksUpdated();
+      
+      // Refetch timesheet entries to ensure we have the latest state from the server
+      // This helps in tracking the status of resubmitted tasks
+      await fetchTimesheetEntries();
     }
   };
   

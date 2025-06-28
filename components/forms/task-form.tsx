@@ -13,13 +13,23 @@ interface JiraTask {
   status?: string;
 }
 
+interface Task {
+  id: string;
+  description: string;
+  hours: string;
+  status: 'pending' | 'approved' | 'rejected';
+  jiraTaskKey?: string;
+  jiraTaskId?: string;
+}
+
 interface TaskFormProps {
   onClose: () => void;
   onSubmit: () => void;
   selectedJiraTask?: JiraTask | null;
+  taskToEdit?: Task | null;
 }
 
-export function TaskForm({ onClose, onSubmit, selectedJiraTask }: TaskFormProps) {
+export function TaskForm({ onClose, onSubmit, selectedJiraTask, taskToEdit }: TaskFormProps) {
   const [description, setDescription] = useState('');
   const [hours, setHours] = useState('');
   const [selectedJiraTaskId, setSelectedJiraTaskId] = useState('');
@@ -30,13 +40,21 @@ export function TaskForm({ onClose, onSubmit, selectedJiraTask }: TaskFormProps)
   useEffect(() => {
     fetchJiraTasks();
     
-    // If a Jira task was passed in, pre-select it
-    if (selectedJiraTask) {
+    // If editing an existing task
+    if (taskToEdit) {
+      setDescription(taskToEdit.description);
+      setHours(taskToEdit.hours);
+      if (taskToEdit.jiraTaskId) {
+        setSelectedJiraTaskId(taskToEdit.jiraTaskId);
+      }
+    }
+    // If creating from a Jira task
+    else if (selectedJiraTask) {
       setSelectedJiraTaskId(selectedJiraTask.id);
       // Pre-populate description with task summary
       setDescription(`${selectedJiraTask.key}: ${selectedJiraTask.summary}`);
     }
-  }, [selectedJiraTask]);
+  }, [selectedJiraTask, taskToEdit]);
 
   const fetchJiraTasks = async () => {
     setLoading(true);
@@ -59,8 +77,11 @@ export function TaskForm({ onClose, onSubmit, selectedJiraTask }: TaskFormProps)
 
     setSubmitting(true);
     try {
-      const response = await fetch('/api/tasks', {
-        method: 'POST',
+      const url = taskToEdit ? `/api/tasks/${taskToEdit.id}` : '/api/tasks';
+      const method = taskToEdit ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -88,7 +109,7 @@ export function TaskForm({ onClose, onSubmit, selectedJiraTask }: TaskFormProps)
       <Card className="w-full max-w-md">
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle>Add New Task</CardTitle>
+            <CardTitle>{taskToEdit ? 'Edit Task' : 'Add New Task'}</CardTitle>
             <Button variant="ghost" size="sm" onClick={onClose}>
               <X className="h-4 w-4" />
             </Button>
