@@ -31,12 +31,6 @@ export function Navbar() {
               </span>
             </div>
 
-            <Link href="/profile">
-              <Button variant="outline" size="sm">
-                <UserCircle className="h-4 w-4 mr-2" />
-                Profile
-              </Button>
-            </Link>
 
             {session.user?.role === 'admin' && (
               <Link href="/admin">
