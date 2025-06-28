@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import {
   Table,
   TableBody,
@@ -171,7 +172,7 @@ export function UserManagement() {
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
                       {user.image ? (
-                        <img src={user.image} alt={user.name} className="h-8 w-8 rounded-full" />
+                        <Image src={user.image} alt={user.name} width={32} height={32} className="h-8 w-8 rounded-full" />
                       ) : (
                         <User className="h-8 w-8 rounded-full bg-gray-100 p-1.5" />
                       )}
@@ -217,7 +218,7 @@ export function UserManagement() {
             <div className="space-y-4 py-4">
               <div className="flex items-center gap-4">
                 {editingUser.image ? (
-                  <img src={editingUser.image} alt={editingUser.name} className="h-12 w-12 rounded-full" />
+                  <Image src={editingUser.image} alt={editingUser.name} width={48} height={48} className="h-12 w-12 rounded-full" />
                 ) : (
                   <User className="h-12 w-12 rounded-full bg-gray-100 p-2.5" />
                 )}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { useTaskUpdates } from '@/lib/contexts/task-context';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -83,7 +83,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
     }
   };
 
-  const fetchJiraTasks = async () => {
+  const fetchJiraTasks = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -122,7 +122,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, pageSize]);
 
   const getTaskUrl = (taskKey: string) => {
     if (!jiraBaseUrl) return '#';

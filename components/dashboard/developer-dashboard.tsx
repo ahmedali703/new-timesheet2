@@ -284,7 +284,7 @@ function DashboardContent() {
                     <ListChecks className="h-8 w-8 text-blue-500" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No tasks yet</h3>
-                  <p className="text-blue-600/70 mb-4">Click "Add Task" to get started with your timesheet.</p>
+                  <p className="text-blue-600/70 mb-4">Click &quot;Add Task&quot; to get started with your timesheet.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
