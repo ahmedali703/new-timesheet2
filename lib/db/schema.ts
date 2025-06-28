@@ -217,6 +217,22 @@ export const invoicesRelations = relations(invoices, ({ one }) => ({
   }),
 }));
 
+// Weekly holidays settings table
+export const weeklyHolidaySettings = pgTable('weekly_holiday_settings', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  monday: boolean('monday').notNull().default(false),
+  tuesday: boolean('tuesday').notNull().default(false),
+  wednesday: boolean('wednesday').notNull().default(false),
+  thursday: boolean('thursday').notNull().default(false),
+  friday: boolean('friday').notNull().default(true),
+  saturday: boolean('saturday').notNull().default(true),
+  sunday: boolean('sunday').notNull().default(false),
+  updatedBy: uuid('updated_by').references(() => users.id),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+
 export const paymentsRelations = relations(payments, ({ one }) => ({
   user: one(users, {
     fields: [payments.userId],
