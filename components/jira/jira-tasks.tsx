@@ -1,0 +1,191 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Loader2, ExternalLink, AlertCircle, Bug, Plus, CheckCircle } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
+
+export interface JiraTask {
+  id: string;
+  key: string;
+  summary: string;
+  status: string;
+  url?: string;
+}
+
+interface JiraTasksProps {
+  onSelectTaskForTimesheet?: (task: JiraTask) => void;
+}
+
+export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
+  const [tasks, setTasks] = useState<JiraTask[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [jiraBaseUrl, setJiraBaseUrl] = useState('');
+  const [debugInfo, setDebugInfo] = useState<any>(null);
+  const [showDebug, setShowDebug] = useState(false);
+
+  useEffect(() => {
+    fetchJiraTasks();
+  }, []);
+
+  const fetchJiraTasks = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch('/api/jira/tasks');
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch Jira tasks');
+      }
+      
+      // Save debug info
+      setDebugInfo(data);
+      
+      if (data.hasJiraIntegration && Array.isArray(data.tasks)) {
+        setTasks(data.tasks);
+        if (data.jiraUrl) {
+          setJiraBaseUrl(data.jiraUrl);
+        }
+      } else if (!data.hasJiraIntegration) {
+        setError('Please connect your account to Jira first.');
+      } else {
+        setTasks([]);
+      }
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch Jira tasks');
+      console.error('Error fetching Jira tasks:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getTaskUrl = (taskKey: string) => {
+    if (!jiraBaseUrl) return '#';
+    return `${jiraBaseUrl}/browse/${taskKey}`;
+  };
+
+  // Handler for selecting a task to add to the timesheet
+  const handleSelectForTimesheet = (task: JiraTask) => {
+    if (onSelectTaskForTimesheet) {
+      onSelectTaskForTimesheet(task);
+    }
+  };
+
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle>My Jira Tasks</CardTitle>
+            <CardDescription>Tasks assigned to you in Jira</CardDescription>
+          </div>
+          <div className="flex space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={fetchJiraTasks}
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+              Refresh
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowDebug(!showDebug)}
+            >
+              <Bug className="h-4 w-4 mr-2" />
+              {showDebug ? 'Hide Debug' : 'Debug'}
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        ) : error ? (
+          <div className="bg-amber-50 p-4 rounded-md flex items-start space-x-2">
+            <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
+            <div className="text-sm text-amber-800">{error}</div>
+          </div>
+        ) : tasks.length === 0 ? (
+          <div className="space-y-4">
+            <div className="text-center py-4 text-gray-500">
+              No tasks are currently assigned to you in Jira.
+            </div>
+            
+            {showDebug && debugInfo && (
+              <div className="bg-gray-50 p-4 rounded-md border">
+                <div className="font-semibold mb-2 text-sm">Debug Information:</div>
+                <div className="text-xs font-mono overflow-auto max-h-60 whitespace-pre">
+                  {JSON.stringify(debugInfo, null, 2)}
+                </div>
+                <div className="mt-3 text-xs text-gray-500">
+                  <p>Common issues:</p>
+                  <ul className="list-disc pl-5 mt-1">
+                    <li>Your email format in Jira might differ from the one in this app</li>
+                    <li>You might not have any tasks assigned in Jira</li>
+                    <li>Your Jira user might be inactive or have a different username</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {tasks.map((task) => (
+              <div 
+                key={task.id} 
+                className="border rounded-lg p-3 hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-medium">
+                        {task.key}
+                      </span>
+                      <span className="text-xs text-gray-500">{task.status}</span>
+                    </div>
+                    <h3 className="font-medium text-sm mt-1">{task.summary}</h3>
+                  </div>
+                  <div className="flex space-x-2 items-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="whitespace-nowrap"
+                    >
+                      <a 
+                        href={getTaskUrl(task.key)} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="h-3 w-3 mr-1" />
+                        Open in Jira
+                      </a>
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleSelectForTimesheet(task)}
+                      className="whitespace-nowrap"
+                    >
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add to Timesheet
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}

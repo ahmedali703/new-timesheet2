@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1719353841131,
+      "tag": "0000_add_developer_work_schedules",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1719353842132,
+      "tag": "0001_add_payment_evidence",
+      "breakpoints": true
+    }
+  ]
+}
