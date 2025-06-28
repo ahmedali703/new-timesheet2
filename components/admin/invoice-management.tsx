@@ -330,7 +330,7 @@ export function InvoiceManagement() {
       case 'rejected':
         return <Badge className="bg-red-100 text-red-800">Rejected</Badge>;
       default:
-        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+        return <Badge className="bg-orange-100 text-orange-800">Pending</Badge>;
     }
   };
   

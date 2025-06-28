@@ -237,7 +237,7 @@ export function getStatusBadge(status: string) {
     case 'rejected':
       return <Badge className="bg-red-100 text-red-800 hover:bg-red-200">{status}</Badge>;
     case 'pending':
-      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">{status}</Badge>;
+      return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200">{status}</Badge>;
     default:
       return <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">{status}</Badge>;
   }

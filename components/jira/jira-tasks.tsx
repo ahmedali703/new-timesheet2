@@ -160,7 +160,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   const getTaskBackgroundColor = (taskId: string): string => {
     const status = getTaskTimesheetStatus(taskId);
     if (status === 'approved') return 'bg-green-50';
-    if (status === 'pending') return 'bg-yellow-50';
+    if (status === 'pending') return 'bg-orange-50';
     if (status === 'rejected') return 'bg-red-50';
     return 'hover:bg-gray-50';
   };

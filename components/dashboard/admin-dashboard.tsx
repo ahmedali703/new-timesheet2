@@ -208,8 +208,8 @@ export function AdminDashboard() {
             <Card className="card-gradient hover:scale-105 transition-transform duration-200">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-semibold text-gray-700">Pending Tasks</CardTitle>
-                <div className="p-2 bg-yellow-100 rounded-full">
-                  <AlertCircle className="h-5 w-5 text-yellow-600" />
+                <div className="p-2 bg-orange-100 rounded-full">
+                  <AlertCircle className="h-5 w-5 text-orange-600" />
                 </div>
               </CardHeader>
               <CardContent>
