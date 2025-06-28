@@ -101,17 +101,12 @@ export async function POST(request: Request) {
     const randomNumbers = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
     const invoiceNumber = `INV-${formattedDate}-${randomNumbers}`;
     
-    // Ensure the uploads directory exists
-    const publicDir = join(process.cwd(), 'public');
-    const uploadsDir = join(publicDir, 'uploads');
-    const invoicesDir = join(uploadsDir, 'invoices');
+    // In serverless environments, we need to use /tmp directory which is writable
+    // Instead of storing files directly in public directory
+    const tmpDir = '/tmp';
+    const invoicesDir = join(tmpDir, 'invoices');
     
-    if (!existsSync(publicDir)) {
-      await mkdir(publicDir, { recursive: true });
-    }
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
+    // Ensure the tmp invoices directory exists
     if (!existsSync(invoicesDir)) {
       await mkdir(invoicesDir, { recursive: true });
     }
@@ -122,13 +117,17 @@ export async function POST(request: Request) {
     const filePath = join(invoicesDir, uniqueFileName);
     
     try {
-      // Convert the file to a Buffer and write it to the filesystem
+      // Convert the file to a Buffer and write it to the temporary filesystem
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
       await writeFile(filePath, buffer as unknown as Uint8Array);
       
-      // The URL that will be accessible from the frontend
-      const fileUrl = `/uploads/invoices/${uniqueFileName}`;
+      // For serverless environments, we'd typically upload to cloud storage here
+      // For now, we'll simulate success and store the reference in the database
+      // In production, you would upload to S3, Azure Blob, etc.
+      
+      // The URL that would be accessible from the frontend (placeholder)
+      const fileUrl = `/api/invoices/download/${uniqueFileName}`;
       
       try {
         // Ensure all values are present and properly formatted
