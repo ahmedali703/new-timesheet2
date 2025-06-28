@@ -38,7 +38,7 @@ import {
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
 import { formatCurrency } from '@/lib/utils';
-import { Loader2, FileUp, Download, Edit, Trash, Plus, FileText } from 'lucide-react';
+import { FileText, Loader2, Plus, Search, Edit, Trash, Download } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface Developer {
@@ -65,6 +65,9 @@ interface Invoice {
   status: 'pending' | 'paid' | 'rejected';
   createdAt: Date;
   updatedAt: Date;
+  fileUrl?: string; // Optional URL to the invoice file
+  pdfUrl?: string; // Optional URL to the PDF version
+  fileName?: string; // Optional filename
   developer: {
     id: string;
     name: string;
@@ -632,6 +635,27 @@ export function InvoiceManagement() {
                       <TableCell>{format(new Date(invoice.createdAt), 'MMM d, yyyy')}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
+                          {/* Download Button */}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              const fileUrl = invoice.fileUrl || invoice.pdfUrl;
+                              if (fileUrl) {
+                                window.open(fileUrl, '_blank');
+                              } else {
+                                toast({
+                                  title: "No file available",
+                                  description: "This invoice doesn't have an attached file.",
+                                  variant: "destructive"
+                                });
+                              }
+                            }}
+                          >
+                            <Download className="h-4 w-4" />
+                            <span className="sr-only">Download</span>
+                          </Button>
+                          {/* Edit Button */}
                           <Button
                             variant="ghost"
                             size="icon"
@@ -640,6 +664,7 @@ export function InvoiceManagement() {
                             <Edit className="h-4 w-4" />
                             <span className="sr-only">Edit</span>
                           </Button>
+                          {/* Delete Button */}
                           <Button
                             variant="ghost"
                             size="icon"

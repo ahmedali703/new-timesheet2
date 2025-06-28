@@ -149,6 +149,7 @@ export function PaymentHistory() {
                         size="sm" 
                         onClick={async (e) => {
                           e.preventDefault();
+                          // Get the fileUrl from the invoice record
                           const fileUrl = invoice.fileUrl || invoice.pdfUrl;
                           
                           if (!fileUrl) {
@@ -161,22 +162,11 @@ export function PaymentHistory() {
                           }
                           
                           try {
-                            // Check if file exists by making a HEAD request
-                            const response = await fetch(fileUrl, { method: 'HEAD' });
-                            
-                            if (response.ok) {
-                              // File exists, proceed with download
-                              window.open(fileUrl, '_blank');
-                            } else {
-                              // File doesn't exist
-                              toast({
-                                title: "File not found",
-                                description: "The invoice file could not be found. Please contact support.",
-                                variant: "destructive"
-                              });
-                            }
+                            // With our new implementation, the fileUrl is in format: `/api/invoices/download/${filename}`
+                            // We can directly open this URL to download the file via our API endpoint
+                            window.open(fileUrl, '_blank');
                           } catch (error) {
-                            console.error('Error checking file:', error);
+                            console.error('Error downloading file:', error);
                             toast({
                               title: "Download error",
                               description: "There was a problem downloading the file. Please try again later.",

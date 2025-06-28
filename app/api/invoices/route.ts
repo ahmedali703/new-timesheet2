@@ -47,6 +47,9 @@ export async function GET(request: Request) {
       status: invoice.status,
       createdAt: invoice.createdAt,
       updatedAt: invoice.updatedAt,
+      fileUrl: invoice.fileUrl,     // Include file URLs for downloading
+      pdfUrl: invoice.pdfUrl,       // Include PDF URL if separate from fileUrl
+      fileName: invoice.fileName,   // Include original file name
       developer: {
         id: user.id,
         name: user.name,

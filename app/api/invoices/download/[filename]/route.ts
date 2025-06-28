@@ -25,10 +25,13 @@ export async function GET(
     }
 
     // Find the invoice in the database to confirm it exists
+    console.log('Looking for invoice with filename:', filename);
     const invoiceRecords = await db
       .select()
       .from(invoices)
       .where(like(invoices.fileUrl, `%${filename}`));
+    
+    console.log('Invoice records found:', invoiceRecords.length);
 
     if (invoiceRecords.length === 0) {
       return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
@@ -48,12 +51,20 @@ export async function GET(
       const filePath = join('/tmp/invoices', filename);
       
       // Check if file exists in temp storage
+      console.log('Checking if file exists in path:', filePath);
+      
       if (!existsSync(filePath)) {
+        console.error('File not found in path:', filePath);
+        
+        // In production, we would check a cloud storage service here instead
+        // This is a temporary solution for development only
         return NextResponse.json({ 
           error: 'Invoice file not found in temporary storage',
           message: 'The file may have been removed during server restart. Please contact support.'
         }, { status: 404 });
       }
+      
+      console.log('File found, proceeding with download');
 
       // Read the file content
       const fileBuffer = await readFile(filePath);
