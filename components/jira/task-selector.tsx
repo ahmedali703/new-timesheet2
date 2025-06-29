@@ -116,7 +116,7 @@ export function JiraTaskSelector({ onTaskSelect, selectedTaskId, disabled = fals
             {selectedTask ? (
               <div className="flex items-center justify-between w-full">
                 <span>{selectedTask.key}</span>
-                <span className="truncate text-sm text-gray-300 max-w-[250px]">
+                <span className="truncate text-sm text-gray-500 max-w-[250px]">
                   {selectedTask.summary}
                 </span>
               </div>
@@ -131,7 +131,7 @@ export function JiraTaskSelector({ onTaskSelect, selectedTaskId, disabled = fals
             <CommandInput placeholder="Search Jira tasks..." />
             <CommandEmpty>
               {error ? (
-                <div className="text-sm text-red-300 p-2">{error}</div>
+                <div className="text-sm text-red-500 p-2">{error}</div>
               ) : (
                 "No tasks found."
               )}
@@ -153,7 +153,7 @@ export function JiraTaskSelector({ onTaskSelect, selectedTaskId, disabled = fals
                         )}
                       />
                     </div>
-                    <span className="text-sm text-gray-300 truncate">
+                    <span className="text-sm text-gray-600 truncate">
                       {task.summary}
                     </span>
                   </div>
@@ -163,7 +163,7 @@ export function JiraTaskSelector({ onTaskSelect, selectedTaskId, disabled = fals
           </Command>
         </PopoverContent>
       </Popover>
-      <div className="flex justify-between text-xs text-gray-300">
+      <div className="flex justify-between text-xs text-gray-500">
         <span>Connected to Jira</span>
         <button 
           onClick={refreshJiraTasks} 

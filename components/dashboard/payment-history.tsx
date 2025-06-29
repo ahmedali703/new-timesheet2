@@ -100,23 +100,21 @@ export function PaymentHistory() {
   };
 
   return (
-    <Card className="w-full bg-black border border-gray-800">
+    <Card>
       <CardHeader>
-        <CardTitle className="text-white">Payment History</CardTitle>
-        <CardDescription className="text-gray-300">
-          Your recent invoices and payments
+        <CardTitle>Payment History</CardTitle>
+        <CardDescription>
+          View all your invoices and payment status
         </CardDescription>
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="flex justify-center items-center py-12">
-            <div className="w-8 h-8 border-2 border-gray-700 border-t-blue-400 rounded-full animate-spin"></div>
-          </div>
+          <div className="text-center py-12">Loading invoice history...</div>
         ) : invoices.length === 0 ? (
-          <div className="text-center py-12 text-gray-400">
-            <FileText className="h-12 w-12 mx-auto mb-3 text-gray-500" />
-            <p className="text-lg font-medium text-gray-200">No invoices yet</p>
-            <p className="text-sm mt-1 text-gray-400">
+          <div className="text-center py-12 text-muted-foreground">
+            <FileText className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+            <p className="text-lg font-medium">No invoices yet</p>
+            <p className="text-sm mt-1">
               Your payment history will appear here once you submit your first timesheet
             </p>
           </div>
@@ -124,32 +122,31 @@ export function PaymentHistory() {
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-gray-800">
-                  <TableHead className="text-gray-300">Invoice #</TableHead>
-                  <TableHead className="text-gray-300">Date</TableHead>
-                  <TableHead className="text-gray-300">Hours</TableHead>
-                  <TableHead className="text-gray-300">Amount</TableHead>
-                  <TableHead className="text-gray-300">Status</TableHead>
-                  <TableHead className="text-gray-300">Payment Date</TableHead>
-                  <TableHead className="text-right text-gray-300">Actions</TableHead>
+                <TableRow>
+                  <TableHead>Invoice #</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Hours</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Payment Date</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {invoices.map((invoice) => (
-                  <TableRow key={invoice.id} className="hover:bg-gray-950 border-b border-gray-800">
-                    <TableCell className="font-medium text-gray-200">{invoice.invoiceNumber}</TableCell>
+                  <TableRow key={invoice.id}>
+                    <TableCell className="font-medium">{invoice.invoiceNumber}</TableCell>
                     <TableCell>
                       {formatDate(invoice.createdAt)}
                     </TableCell>
                     <TableCell>{invoice.totalHours}</TableCell>
                     <TableCell>{formatCurrency(invoice.amount)}</TableCell>
                     <TableCell>{getStatusBadge(invoice.status)}</TableCell>
-                    <TableCell>{invoice.status === 'paid' ? formatDate(invoice.paymentDate) : 'N/A'}</TableCell>
+                    <TableCell>{invoice.status === 'paid' ? formatDate(invoice.updatedAt) : 'N/A'}</TableCell>
                     <TableCell className="text-right">
                       <Button 
                         variant="outline" 
-                        size="sm"
-                        className="bg-black border-gray-700 text-gray-300 hover:bg-blue-950/50 hover:text-blue-300" 
+                        size="sm" 
                         onClick={async (e) => {
                           e.preventDefault();
                           // Get the fileUrl from the invoice record
@@ -177,6 +174,7 @@ export function PaymentHistory() {
                             });
                           }
                         }}
+                        className="hover:bg-blue-50"
                       >
                         <Download className="h-4 w-4 mr-1" />
                         {invoice.fileName || 'Download'}

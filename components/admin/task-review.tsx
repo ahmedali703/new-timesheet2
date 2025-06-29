@@ -78,7 +78,7 @@ export function TaskReview() {
       case 'rejected':
         return <XCircle className="h-4 w-4 text-red-500" />;
       default:
-        return <AlertCircle className="h-4 w-4 text-orange-500" />;
+        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
     }
   };
 
@@ -89,7 +89,7 @@ export function TaskReview() {
       case 'rejected':
         return 'bg-red-100 text-red-800';
       default:
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-yellow-100 text-yellow-800';
     }
   };
 

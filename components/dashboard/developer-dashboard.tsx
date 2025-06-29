@@ -162,18 +162,18 @@ function DashboardContent() {
       case 'rejected':
         return <XCircle className="h-4 w-4 text-red-500" />;
       default:
-        return <AlertCircle className="h-4 w-4 text-orange-500" />;
+        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'approved':
-        return 'bg-green-900/50 text-green-200';
+        return 'bg-green-100 text-green-800';
       case 'rejected':
-        return 'bg-red-900/50 text-red-200';
+        return 'bg-red-100 text-red-800';
       default:
-        return 'bg-orange-900/50 text-orange-200';
+        return 'bg-yellow-100 text-yellow-800';
     }
   };
 
@@ -182,15 +182,10 @@ function DashboardContent() {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8">
         <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">
-              Developer Dashboard
-            </h2>
-            <p className="text-blue-600/70 font-medium">Manage your tasks and track your progress</p>
-          </div>
-          <Button onClick={() => setShowTaskForm(true)} className="btn-primary">
+          <h2 className="text-3xl font-bold tracking-tight">Developer Dashboard</h2>
+          <Button onClick={() => setShowTaskForm(true)} size="sm">
             <Plus className="mr-2 h-4 w-4" /> Add Task
           </Button>
         </div>
@@ -199,129 +194,111 @@ function DashboardContent() {
         <WeekOverview />
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <WeekOverview />
-        <div className="lg:col-span-2">
-          <Card className="shadow-xl bg-black border border-gray-800">
-            <CardHeader className="pb-3">
-              <div className="flex justify-between items-center">
-                <div>
-                  <CardTitle className="text-white">Week Summary</CardTitle>
-                  <CardDescription className="text-gray-300">Track your hours and earnings</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                <Card className="shadow bg-black border border-gray-800">
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <p className="text-sm font-medium mb-1 text-white">Total Hours</p>
-                        <p className="text-2xl font-bold text-white">{weekSummary.totalHours.toFixed(1)}</p>
-                      </div>
-                      <div className="p-2 bg-blue-950/30 rounded-full border border-blue-900/30">
-                        <Clock className="h-5 w-5 text-blue-400" />
-                      </div>
-                    </div>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {weekSummary.approvedHours.toFixed(1)} hours approved
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card className="shadow bg-black border border-gray-800">
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <p className="text-sm font-medium mb-1 text-white">Total Payout</p>
-                        <p className="text-2xl font-bold text-white">{formatCurrency(weekSummary.totalPayout)}</p>
-                      </div>
-                      <div className="p-2 bg-blue-950/30 rounded-full border border-blue-900/30">
-                        <DollarSign className="h-5 w-5 text-blue-400" />
-                      </div>
-                    </div>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {formatCurrency(weekSummary.approvedPayout)} confirmed earnings
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Hours</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{weekSummary.totalHours}</div>
+            <p className="text-xs text-muted-foreground">This week</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Approved Hours</CardTitle>
+            <CheckCircle className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{weekSummary.approvedHours}</div>
+            <p className="text-xs text-muted-foreground">Ready for payment</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Payout</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(weekSummary.totalPayout)}</div>
+            <p className="text-xs text-muted-foreground">Potential earnings</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Approved Payout</CardTitle>
+            <DollarSign className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(weekSummary.approvedPayout)}</div>
+            <p className="text-xs text-muted-foreground">Confirmed earnings</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Tabs Section - Using proper shadcn/ui Tabs */}
-      <Tabs defaultValue="tasks" className="mb-8">
-        <TabsList className="grid w-full grid-cols-2 bg-gray-950 border border-gray-800">
-          <TabsTrigger value="tasks" className="data-[state=active]:bg-blue-900/50 data-[state=active]:text-white">My Tasks</TabsTrigger>
-          <TabsTrigger value="jira" className="data-[state=active]:bg-blue-900/50 data-[state=active]:text-white">Jira Integration</TabsTrigger>
+      <Tabs defaultValue="tasks" className="mt-8">
+        <TabsList className="w-full justify-start">
+          <TabsTrigger value="tasks" className="flex items-center gap-2">
+            <ListChecks className="h-4 w-4" />
+            My Tasks
+          </TabsTrigger>
+          <TabsTrigger value="jira" className="flex items-center gap-2">
+            <Link className="h-4 w-4" />
+            Jira Integration
+          </TabsTrigger>
+          <TabsTrigger value="payments" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Payment History
+          </TabsTrigger>
         </TabsList>
 
         {/* My Tasks Tab */}
         <TabsContent value="tasks" className="mt-6">
-          <Card className="w-full shadow-xl bg-black border border-gray-800">
+          <Card>
             <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <CardTitle className="text-white">Task Management</CardTitle>
-                  <CardDescription className="text-gray-300">
-                    Log and manage your tasks
-                  </CardDescription>
-                </div>
-                <Button 
-                  onClick={() => {
-                    setShowTaskForm(true);
-                    setTaskToEdit(null);
-                    setSelectedJiraTask(null);
-                  }}
-                  className="whitespace-nowrap bg-blue-800 text-white hover:bg-blue-700"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  New Task
-                </Button>
-              </div>
+              <CardTitle>My Tasks</CardTitle>
+              <CardDescription>All tasks submitted this week</CardDescription>
             </CardHeader>
             <CardContent>
               {tasks.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                    <ListChecks className="h-8 w-8 text-blue-500" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No tasks yet</h3>
-                  <p className="text-blue-600/70 mb-4">Click &quot;Add Task&quot; to get started with your timesheet.</p>
+                <div className="text-center py-8 text-gray-500">
+                  No tasks submitted yet. Click &quot;Add Task&quot; to get started.
                 </div>
               ) : (
                 <div className="space-y-4">
                   {loading ? (
-                    <div className="flex justify-center items-center py-12">
-                      <div className="animate-spin rounded-full h-10 w-10 border-3 border-blue-200 border-t-blue-500"></div>
-                      <span className="ml-3 text-blue-600/70">Loading tasks...</span>
+                    <div className="flex justify-center items-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                     </div>
                   ) : tasks.map((task) => (
-                    <div key={task.id} className="bg-gray-900/70 backdrop-blur-sm border border-gray-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.01]">
-                      <div className="flex justify-between items-start flex-1">
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium text-sm text-white">{task.description}</p>
+                    <div key={task.id} className="border rounded-lg p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-2">
+                            {getStatusIcon(task.status)}
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
+                              {task.status}
+                            </span>
                             {task.jiraTaskKey && (
-                              <span className="text-xs bg-blue-950/30 text-blue-300 px-2 py-0.5 rounded-md flex items-center border border-blue-900/30">
-                                <Link className="h-3 w-3 mr-1" />
+                              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
                                 {task.jiraTaskKey}
                               </span>
                             )}
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
-                            <p>{new Date(task.createdAt).toLocaleDateString()}</p>
-                            <span>•</span>
-                            <p>{task.hours} hours</p>
-                            {task.adminComment && (
-                              <span className="ml-2 text-orange-400 flex items-center">
-                                <AlertCircle className="h-3 w-3 mr-1" />
-                                {task.adminComment}
-                              </span>
-                            )}
-                          </div>
+                          <h3 className="font-medium text-gray-900 mb-1">{task.description}</h3>
+                          <p className="text-sm text-gray-500">
+                            {task.hours} hours • {formatCurrency(Number(task.hours) * Number(session?.user?.hourlyRate || 0))}
+                          </p>
+                          {task.adminComment && (
+                            <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
+                              <strong>Admin feedback:</strong> {task.adminComment}
+                            </div>
+                          )}
                         </div>
                         <div className="flex space-x-2 ml-4">
                           {/* Only allow editing for pending tasks */}
@@ -329,7 +306,7 @@ function DashboardContent() {
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-8 w-8 text-blue-400 hover:text-blue-300 hover:bg-blue-950/30"
+                              className="h-8 w-8 text-blue-500 hover:text-blue-700 hover:bg-blue-50"
                               onClick={() => handleEditTask(task)}
                             >
                               <Pencil className="h-4 w-4" />
@@ -342,7 +319,7 @@ function DashboardContent() {
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-950/30"
+                              className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
                               onClick={() => handleDeleteTask(task.id)}
                             >
                               <Trash2 className="h-4 w-4" />
@@ -356,14 +333,13 @@ function DashboardContent() {
                     
                     {/* Pagination Controls */}
                     {taskPagination.total > 0 && (
-                      <div className="flex items-center justify-between border-t border-gray-800 bg-black px-4 py-3 sm:px-6 mt-4">
+                      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-4">
                         <div className="flex flex-1 justify-between sm:hidden">
                           <Button 
                             variant="outline" 
                             size="sm"
                             disabled={taskPage <= 1}
                             onClick={handlePreviousPage}
-                            className="bg-black border-gray-700 text-gray-300 hover:bg-gray-950"
                           >
                             Previous
                           </Button>
@@ -372,14 +348,13 @@ function DashboardContent() {
                             size="sm"
                             disabled={!taskPagination.hasMore}
                             onClick={handleNextPage}
-                            className="bg-black border-gray-700 text-gray-300 hover:bg-gray-950"
                           >
                             Next
                           </Button>
                         </div>
                         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                           <div>
-                            <p className="text-sm text-gray-300">
+                            <p className="text-sm text-gray-700">
                               Showing <span className="font-medium">{tasks.length > 0 ? (taskPage - 1) * tasksPerPage + 1 : 0}</span> to{' '}
                               <span className="font-medium">
                                 {Math.min(taskPage * tasksPerPage, taskPagination.total)}
@@ -429,7 +404,7 @@ function DashboardContent() {
 
         {/* Jira Integration Tab */}
         <TabsContent value="jira" className="mt-6">
-          <div className="mb-2 text-sm text-gray-300">
+          <div className="mb-2 text-sm text-gray-500">
             Connect your Jira account to view and select tasks when logging time
           </div>
           <Card>

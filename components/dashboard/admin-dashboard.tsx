@@ -47,76 +47,89 @@ export function AdminDashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center py-16">
-        <div className="animate-spin rounded-full h-12 w-12 border-3 border-gray-700 border-t-blue-500"></div>
-        <span className="ml-4 text-lg text-gray-300">Loading admin dashboard...</span>
-      </div>
-    );
+    return <div className="flex justify-center py-8">Loading...</div>;
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent mb-2">
-          Admin Dashboard
-        </h1>
-        <p className="text-gray-300 text-lg">Manage your team and projects efficiently</p>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-black backdrop-blur-sm border border-gray-800 rounded-xl p-2">
-        <nav className="flex flex-wrap gap-2">
+      <div className="border-b border-gray-200">
+        <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'overview'
-                ? 'bg-blue-950 text-blue-400 shadow-lg border border-blue-900/50'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-900'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Overview
-            </div>
+            Overview
           </button>
           <button
             onClick={() => setActiveTab('weeks')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'weeks'
-                ? 'bg-blue-950 text-blue-400 shadow-lg border border-blue-900/50'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-900'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4" />
-              Weeks
-            </div>
+            Week Management
           </button>
           <button
             onClick={() => setActiveTab('tasks')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'tasks'
-                ? 'bg-blue-950 text-blue-400 shadow-lg border border-blue-900/50'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-900'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4" />
-              Tasks
-            </div>
+            Task Review
           </button>
           <button
             onClick={() => setActiveTab('payments')}
-            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'payments'
-                ? 'bg-blue-950 text-blue-400 shadow-lg border border-blue-900/50'
-                : 'text-blue-400 hover:text-blue-300 hover:bg-gray-900'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            <div className="flex items-center gap-2">
-              <DollarSign className="h-4 w-4" />
-              Payments
+            Payment Evidence
+          </button>
+          <button
+            onClick={() => setActiveTab('users')}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'users'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            User Management
+          </button>
+          <button
+            onClick={() => setActiveTab('schedules')}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'schedules'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Work Schedules
+          </button>
+          <button
+            onClick={() => setActiveTab('invoices')}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'invoices'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center">
+              <Receipt className="h-4 w-4 mr-1" />
+              Invoices
             </div>
           </button>
         </nav>
@@ -124,58 +137,50 @@ export function AdminDashboard() {
 
       {/* Overview Tab */}
       {activeTab === 'overview' && (
-        <div className="space-y-8 animate-slide-in">
+        <div className="space-y-6">
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-black border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-semibold text-gray-200">Total Developers</CardTitle>
-                <div className="p-2 bg-blue-950/30 rounded-full border border-blue-900/30">
-                  <Users className="h-5 w-5 text-blue-400" />
-                </div>
+                <CardTitle className="text-sm font-medium">Total Developers</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-100 mb-1">{stats.totalDevelopers}</div>
-                <p className="text-sm text-gray-400 font-medium">Active freelancers</p>
+                <div className="text-2xl font-bold">{stats.totalDevelopers}</div>
+                <p className="text-xs text-muted-foreground">Active freelancers</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-black border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-semibold text-gray-200">Total Hours</CardTitle>
-                <div className="p-2 bg-green-950/30 rounded-full border border-green-900/30">
-                  <Clock className="h-5 w-5 text-green-400" />
-                </div>
+                <CardTitle className="text-sm font-medium">Total Hours</CardTitle>
+                <Clock className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-100 mb-1">{stats.totalHours}</div>
-                <p className="text-sm text-gray-400 font-medium">This week</p>
+                <div className="text-2xl font-bold">{stats.totalHours}</div>
+                <p className="text-xs text-muted-foreground">This week</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-black border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-semibold text-gray-200">Total Cost</CardTitle>
-                <div className="p-2 bg-purple-900/30 rounded-full border border-purple-700/30">
-                  <DollarSign className="h-5 w-5 text-purple-400" />
-                </div>
+                <CardTitle className="text-sm font-medium">Total Cost</CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-100 mb-1">${stats.totalCost}</div>
-                <p className="text-sm text-gray-400 font-medium">Weekly budget</p>
+                <div className="text-2xl font-bold">${stats.totalCost}</div>
+                <p className="text-xs text-muted-foreground">Weekly budget</p>
               </CardContent>
             </Card>
 
-            <Card className="bg-black border-gray-800 hover:scale-105 transition-transform duration-200 shadow-md">
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-semibold text-gray-200">Pending Tasks</CardTitle>
-                <div className="p-2 bg-orange-900/30 rounded-full border border-orange-700/30">
-                  <AlertCircle className="h-5 w-5 text-orange-400" />
-                </div>
+                <CardTitle className="text-sm font-medium">Pending Tasks</CardTitle>
+                <AlertCircle className="h-4 w-4 text-yellow-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-100 mb-1">{stats.pendingTasks}</div>
-                <p className="text-sm text-gray-400 font-medium">Awaiting review</p>
+                <div className="text-2xl font-bold">{stats.pendingTasks}</div>
+                <p className="text-xs text-muted-foreground">Awaiting review</p>
               </CardContent>
             </Card>
           </div>

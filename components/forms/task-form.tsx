@@ -106,8 +106,8 @@ export function TaskForm({ onClose, onSubmit, selectedJiraTask, taskToEdit }: Ta
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-md bg-gray-900 border-gray-800">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <Card className="w-full max-w-md">
         <CardHeader>
           <div className="flex justify-between items-center">
             <CardTitle>{taskToEdit ? 'Edit Task' : 'Add New Task'}</CardTitle>
@@ -122,14 +122,14 @@ export function TaskForm({ onClose, onSubmit, selectedJiraTask, taskToEdit }: Ta
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="jira-task" className="block text-sm font-medium text-gray-200 mb-1">
+              <label htmlFor="jira-task" className="block text-sm font-medium text-gray-700 mb-1">
                 Jira Task (Optional)
               </label>
               <select
                 id="jira-task"
                 value={selectedJiraTaskId}
                 onChange={(e) => setSelectedJiraTaskId(e.target.value)}
-                className="w-full rounded-md bg-gray-800 border border-gray-700 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 disabled={loading}
               >
                 <option value="">Select a Jira task...</option>
@@ -140,26 +140,27 @@ export function TaskForm({ onClose, onSubmit, selectedJiraTask, taskToEdit }: Ta
                 ))}
               </select>
               {loading && (
-                <p className="text-xs text-gray-400 mt-1">Loading Jira tasks...</p>
+                <p className="text-xs text-gray-500 mt-1">Loading Jira tasks...</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-200 mb-1">
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
                 Task Description *
               </label>
-              <Input
+              <textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="What did you work on?"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                rows={3}
+                placeholder="Describe what you worked on..."
                 required
-                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400"
               />
             </div>
 
             <div>
-              <label htmlFor="hours" className="block text-sm font-medium text-gray-200 mb-1">
+              <label htmlFor="hours" className="block text-sm font-medium text-gray-700 mb-1">
                 Hours Worked *
               </label>
               <Input
@@ -172,7 +173,6 @@ export function TaskForm({ onClose, onSubmit, selectedJiraTask, taskToEdit }: Ta
                 onChange={(e) => setHours(e.target.value)}
                 placeholder="e.g., 2.5"
                 required
-                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-400"
               />
             </div>
 

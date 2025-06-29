@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -73,7 +73,12 @@ export function WeekManagement() {
   
   const [savingHolidays, setSavingHolidays] = useState(false);
 
-  const fetchWeeks = useCallback(async () => {
+  useEffect(() => {
+    fetchWeeks();
+    fetchWeeklyHolidays();
+  }, []);
+
+  const fetchWeeks = async () => {
     try {
       const response = await fetch('/api/admin/weeks');
       if (response.ok) {
@@ -90,9 +95,9 @@ export function WeekManagement() {
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  };
 
-  const fetchWeeklyHolidays = useCallback(async () => {
+  const fetchWeeklyHolidays = async () => {
     try {
       const response = await fetch('/api/admin/weekly-holidays');
       if (response.ok) {
@@ -104,12 +109,7 @@ export function WeekManagement() {
     } catch (error) {
       console.error('Error fetching weekly holidays:', error);
     }
-  }, []);
-
-  useEffect(() => {
-    fetchWeeks();
-    fetchWeeklyHolidays();
-  }, [fetchWeeks, fetchWeeklyHolidays]);
+  };
 
   const saveWeeklyHolidays = async () => {
     setSavingHolidays(true);

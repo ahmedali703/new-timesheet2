@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { useTaskUpdates } from '@/lib/contexts/task-context';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -83,7 +83,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
     }
   };
 
-  const fetchJiraTasks = useCallback(async () => {
+  const fetchJiraTasks = async () => {
     setLoading(true);
     setError(null);
     
@@ -122,7 +122,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize]);
+  };
 
   const getTaskUrl = (taskKey: string) => {
     if (!jiraBaseUrl) return '#';
@@ -160,7 +160,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   const getTaskBackgroundColor = (taskId: string): string => {
     const status = getTaskTimesheetStatus(taskId);
     if (status === 'approved') return 'bg-green-50';
-    if (status === 'pending') return 'bg-orange-50';
+    if (status === 'pending') return 'bg-yellow-50';
     if (status === 'rejected') return 'bg-red-50';
     return 'hover:bg-gray-50';
   };
@@ -204,12 +204,12 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
   };
   
   return (
-    <Card className="w-full bg-black border border-gray-800">
+    <Card className="w-full">
       <CardHeader>
         <div className="flex justify-between items-center">
           <div>
-            <CardTitle className="text-white">My Jira Tasks</CardTitle>
-            <CardDescription className="text-gray-300">Tasks assigned to you in Jira</CardDescription>
+            <CardTitle>My Jira Tasks</CardTitle>
+            <CardDescription>Tasks assigned to you in Jira</CardDescription>
           </div>
           <div className="flex space-x-2">
             <Button 
@@ -217,7 +217,6 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
               size="sm"
               onClick={fetchJiraTasks}
               disabled={loading}
-              className="bg-black border-gray-700 text-gray-300 hover:bg-gray-950"
             >
               {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
               Refresh
@@ -226,7 +225,6 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
               variant="ghost"
               size="sm"
               onClick={() => setShowDebug(!showDebug)}
-              className="text-gray-300 hover:bg-gray-950"
             >
               <Bug className="h-4 w-4 mr-2" />
               {showDebug ? 'Hide Debug' : 'Debug'}
@@ -240,13 +238,13 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
           <div className="relative">
             <Input
               placeholder="Search tasks by key, summary or status"
-              className="pr-10 bg-black border-gray-700 text-white placeholder:text-gray-500"
+              className="pr-10"
               value={searchQuery}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
               <button 
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 onClick={() => setSearchQuery('')}
               >
                 ✕
@@ -260,23 +258,23 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : error ? (
-          <div className="bg-red-900/30 p-4 rounded-md flex items-start space-x-2">
-            <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
-            <p className="text-sm text-yellow-200">{error}</p>
+          <div className="bg-amber-50 p-4 rounded-md flex items-start space-x-2">
+            <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
+            <div className="text-sm text-amber-800">{error}</div>
           </div>
         ) : tasks.length === 0 ? (
           <div className="space-y-4">
-            <div className="text-center py-4 text-gray-300">
+            <div className="text-center py-4 text-gray-500">
               No tasks are currently assigned to you in Jira.
             </div>
             
             {showDebug && debugInfo && (
-              <div className="bg-yellow-900/30 border-l-4 border-yellow-500 p-3 mb-4">
+              <div className="bg-gray-50 p-4 rounded-md border">
                 <div className="font-semibold mb-2 text-sm">Debug Information:</div>
                 <div className="text-xs font-mono overflow-auto max-h-60 whitespace-pre">
                   {JSON.stringify(debugInfo, null, 2)}
                 </div>
-                <div className="mt-3 text-xs text-gray-300">
+                <div className="mt-3 text-xs text-gray-500">
                   <p>Common issues:</p>
                   <ul className="list-disc pl-5 mt-1">
                     <li>Your email format in Jira might differ from the one in this app</li>
@@ -300,7 +298,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
                       <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-medium">
                         {task.key}
                       </span>
-                      <span className="text-xs text-gray-300">{task.status}</span>
+                      <span className="text-xs text-gray-500">{task.status}</span>
                     </div>
                     <h3 className="font-medium text-sm mt-1">{task.summary}</h3>
                   </div>
@@ -356,7 +354,7 @@ export function JiraTasks({ onSelectTaskForTimesheet }: JiraTasksProps = {}) {
         {/* Pagination Controls */}
         {filteredTasks.length > 0 && (
           <div className="mt-6 flex items-center justify-between">
-            <div className="text-sm text-gray-300">
+            <div className="text-sm text-gray-500">
               {searchQuery ? 
                 `Showing ${filteredTasks.length} filtered results` : 
                 `Showing ${tasks.length} of ${totalTasks} tasks - Page ${page} of ${totalPages}`

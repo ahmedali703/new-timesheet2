@@ -7,10 +7,9 @@ import { Navbar } from '@/components/layout/navbar';
 import { DeveloperDashboard } from '@/components/dashboard/developer-dashboard';
 import { AdminDashboard } from '@/components/dashboard/admin-dashboard';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import type { Session } from 'next-auth';
 
 export default function Home() {
-  const { data: session, status } = useSession() as { data: Session | null, status: string };
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -28,16 +27,14 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="animate-fade-in">
-          {session.user?.role === 'admin' || session.user?.role === 'hr' ? (
-            <AdminDashboard />
-          ) : (
-            <DeveloperDashboard />
-          )}
-        </div>
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {session.user?.role === 'admin' || session.user?.role === 'hr' ? (
+          <AdminDashboard />
+        ) : (
+          <DeveloperDashboard />
+        )}
       </main>
     </div>
   );

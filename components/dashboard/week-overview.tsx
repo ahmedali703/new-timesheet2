@@ -100,7 +100,7 @@ export function WeekOverview() {
       <Card>
         <CardContent className="pt-6">
           <div className="flex justify-center items-center h-40">
-            <p className="text-gray-300">Loading current week information...</p>
+            <p>Loading current week information...</p>
           </div>
         </CardContent>
       </Card>
@@ -112,7 +112,7 @@ export function WeekOverview() {
       <Card>
         <CardContent className="pt-6">
           <div className="flex justify-center items-center h-40">
-            <p className="text-gray-300">No active week found. Please contact an administrator.</p>
+            <p>No active week found. Please contact an administrator.</p>
           </div>
         </CardContent>
       </Card>
@@ -124,40 +124,41 @@ export function WeekOverview() {
   };
 
   return (
-    <div className="p-4 md:p-6 bg-black border border-gray-800/50 rounded-xl shadow-xl">
-      <div className="flex flex-col space-y-6">
+    <Card>
+      <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-white">Current Week Overview</h2>
-            <div className="flex items-center space-x-2 text-gray-300">
+            <CardTitle>Current Week Overview</CardTitle>
+            <CardDescription>
               {formatDate(weekStatus.startDate)} - {formatDate(weekStatus.endDate)}
               {' '}
               {weekStatus.isOpen ? (
-                <span className="inline-flex bg-green-950/30 text-green-400 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2 border border-green-700/50">
+                <span className="inline-flex bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2">
                   Active
                 </span>
               ) : (
-                <span className="inline-flex bg-red-950/30 text-red-400 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2 border border-red-700/50">
+                <span className="inline-flex bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2">
                   Closed
                 </span>
               )}
-            </div>
+            </CardDescription>
           </div>
         </div>
-        
+      </CardHeader>
+      <CardContent>
         <div className="space-y-8">
           {/* Hours Progress */}
           <div className="space-y-2">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="text-sm font-medium text-white">Hours Progress</h3>
-                <p className="text-xs text-gray-400">
+                <h3 className="text-sm font-medium">Hours Progress</h3>
+                <p className="text-xs text-muted-foreground">
                   {weekStatus.totalHoursWorked} of {weekStatus.totalHoursExpected} hours logged
                 </p>
               </div>
               <div className="text-xs text-right">
                 <div className="font-medium">{progressPercentage}%</div>
-                <div className="text-gray-400">
+                <div className="text-muted-foreground">
                   {weekStatus.remainingHours} hours remaining
                 </div>
               </div>
@@ -168,55 +169,55 @@ export function WeekOverview() {
           {/* Work details */}
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-start space-x-3">
-              <div className="bg-blue-950/30 p-2 rounded-lg border border-blue-900/30">
-                <Clock3 className="h-4 w-4 text-blue-400" />
+              <div className="bg-blue-100 p-2 rounded-lg">
+                <Clock3 className="h-4 w-4 text-blue-700" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white">Working Hours</p>
-                <p className="text-xs text-gray-400">
+                <p className="text-sm font-medium">Working Hours</p>
+                <p className="text-xs text-muted-foreground">
                   {weekStatus.hoursPerDay} hours/day × {weekStatus.daysPerWeek} days
                 </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="p-2 bg-green-950/30 rounded-lg border border-green-900/30">
-                <ClockIcon className="h-4 w-4 text-green-400" />
+              <div className="bg-green-100 p-2 rounded-lg">
+                <ClockIcon className="h-4 w-4 text-green-700" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white">Hourly Rate</p>
-                <p className="text-xs text-gray-400">
+                <p className="text-sm font-medium">Hourly Rate</p>
+                <p className="text-xs text-muted-foreground">
                   {formatCurrency(weekStatus.hourlyRate)} per hour
                 </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="p-2 bg-purple-950/30 rounded-lg border border-purple-900/30">
-                <DollarSign className="h-4 w-4 text-purple-400" />
+              <div className="bg-amber-100 p-2 rounded-lg">
+                <DollarSign className="h-4 w-4 text-amber-700" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white">Expected Earnings</p>
-                <p className="text-xs text-gray-400">
+                <p className="text-sm font-medium">Expected Earnings</p>
+                <p className="text-xs text-muted-foreground">
                   {formatCurrency(weekStatus.expectedEarnings)}
                 </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="p-2 bg-purple-950/30 rounded-lg border border-purple-900/30">
-                <DollarSign className="h-4 w-4 text-purple-400" />
+              <div className="bg-purple-100 p-2 rounded-lg">
+                <DollarSign className="h-4 w-4 text-purple-700" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white">Current Earnings</p>
-                <p className="text-xs text-gray-400">
+                <p className="text-sm font-medium">Current Earnings</p>
+                <p className="text-xs text-muted-foreground">
                   {formatCurrency(weekStatus.actualEarnings)} ({Math.round((weekStatus.actualEarnings / weekStatus.expectedEarnings) * 100)}%)
                 </p>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
