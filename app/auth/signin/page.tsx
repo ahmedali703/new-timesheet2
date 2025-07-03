@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Clock, ChevronRight, Calendar, BarChart3, Clock3 } from 'lucide-react';
+import { Clock, ChevronRight, Calendar, BarChart3, Clock3, Sparkles, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function SignIn() {
@@ -20,47 +20,29 @@ export default function SignIn() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Background animated elements */}
-      <motion.div
-        className="absolute -top-24 -left-24 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
-        animate={{
-          x: [0, 30, 0],
-          y: [0, 40, 0],
-        }}
-        transition={{
-          repeat: Infinity,
-          duration: 20,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute top-1/3 -right-24 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
-        animate={{
-          x: [0, -30, 0],
-          y: [0, -40, 0],
-        }}
-        transition={{
-          repeat: Infinity,
-          duration: 25,
-          ease: "easeInOut",
-        }}
-      />
+    <div className="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8 overflow-hidden relative">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
+      </div>
 
       <motion.div
-        className="z-10"
+        className="z-10 w-full max-w-md"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <Card className="w-full max-w-md shadow-xl bg-white/90 backdrop-blur-sm border-0 overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
+        <Card className="glass-card border-0 overflow-hidden">
+          {/* Gradient Border Effect */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-primary"></div>
           
-          <CardHeader className="text-center pt-8">
+          <CardHeader className="text-center pt-8 pb-6">
             <motion.div 
               className="flex justify-center mb-6"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
               transition={{ 
                 type: "spring", 
                 stiffness: 260, 
@@ -68,8 +50,11 @@ export default function SignIn() {
                 delay: 0.3 
               }}
             >
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Clock className="h-10 w-10 text-blue-600" />
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-primary rounded-full blur-lg opacity-50 animate-pulse-glow"></div>
+                <div className="relative p-4 bg-gradient-primary rounded-full">
+                  <Clock className="h-12 w-12 text-white" />
+                </div>
               </div>
             </motion.div>
             
@@ -78,9 +63,14 @@ export default function SignIn() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <CardTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600">TimeTracker</CardTitle>
-              <CardDescription className="text-gray-600 mt-2 text-base">
-                Sign in to manage your freelancer timesheets
+              <CardTitle className="text-3xl font-bold gradient-text mb-2">TimeTracker</CardTitle>
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-muted-foreground">by MyQuery.AI</span>
+                <Sparkles className="h-4 w-4 text-primary" />
+              </div>
+              <CardDescription className="text-muted-foreground text-base">
+                Sign in to manage your freelancer timesheets with style
               </CardDescription>
             </motion.div>
           </CardHeader>
@@ -94,7 +84,7 @@ export default function SignIn() {
             >
               <Button
                 onClick={() => signIn('google', { callbackUrl: '/' })}
-                className="w-full transition-all hover:shadow-md hover:translate-y-[-1px] bg-white hover:bg-gray-50 text-gray-800 border border-gray-200"
+                className="w-full btn-secondary hover:scale-105 transition-all duration-300"
                 size="lg"
               >
                 <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
@@ -119,35 +109,37 @@ export default function SignIn() {
               </Button>
               
               <Button
-                variant="default"
                 onClick={() => signIn('google', { callbackUrl: '/' })}
-                className="w-full relative overflow-hidden transition-all"
+                className="w-full btn-primary relative overflow-hidden group"
                 size="lg"
               >
                 <span className="relative z-10 flex items-center">
-                  <Clock3 className="mr-2 h-5 w-5" />
+                  <Zap className="mr-2 h-5 w-5" />
                   Get Started
-                  <ChevronRight className="ml-2 h-4 w-4" />
+                  <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </span>
-                <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600 opacity-0 hover:opacity-100 transition-opacity duration-300" />
               </Button>
             </motion.div>
           </CardContent>
           
-          <CardFooter className="px-8 py-4 bg-gray-50/50 flex justify-between items-center">
+          <CardFooter className="px-8 py-6 bg-white/5 backdrop-blur-sm">
             <motion.div 
-              className="flex space-x-6"
+              className="w-full flex justify-center space-x-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 0.6 }}
             >
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-blue-500" />
-                <span className="text-xs text-gray-500">Track Time</span>
+              <div className="flex items-center space-x-2 text-muted-foreground">
+                <Calendar className="h-4 w-4 text-primary" />
+                <span className="text-xs font-medium">Track Time</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <BarChart3 className="h-4 w-4 text-purple-500" />
-                <span className="text-xs text-gray-500">View Reports</span>
+              <div className="flex items-center space-x-2 text-muted-foreground">
+                <BarChart3 className="h-4 w-4 text-primary" />
+                <span className="text-xs font-medium">View Reports</span>
+              </div>
+              <div className="flex items-center space-x-2 text-muted-foreground">
+                <Clock3 className="h-4 w-4 text-primary" />
+                <span className="text-xs font-medium">Manage Tasks</span>
               </div>
             </motion.div>
           </CardFooter>

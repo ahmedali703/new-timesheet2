@@ -5,16 +5,10 @@ import { useTaskUpdates } from '@/lib/contexts/task-context';
 import { format } from 'date-fns';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { ClockIcon, CalendarIcon, DollarSign, Clock3 } from 'lucide-react';
+import { ClockIcon, CalendarIcon, DollarSign, Clock3, TrendingUp, Target, Zap } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { formatCurrency } from '@/lib/utils';
-
-interface Week {
-  id: string;
-  startDate: string;
-  endDate: string;
-  isOpen: boolean;
-}
+import { motion } from 'framer-motion';
 
 interface WeekStatus {
   currentWeekId: string;
@@ -40,26 +34,20 @@ export function WeekOverview() {
 
   useEffect(() => {
     fetchWeekStatus();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
-  // Re-fetch week status whenever ANY task-related changes happen
-  // This includes adding/deleting tasks, approvals, or any timesheet changes
   useEffect(() => {
     if (lastTaskUpdate) {
       fetchWeekStatus();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastTaskUpdate]);
   
-  // Poll for updates every 30 seconds to catch changes made from other clients
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchWeekStatus();
-    }, 30000); // 30 seconds
+    }, 30000);
     
     return () => clearInterval(intervalId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -97,25 +85,24 @@ export function WeekOverview() {
 
   if (loading) {
     return (
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex justify-center items-center h-40">
-            <p>Loading current week information...</p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="card-modern">
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+        </div>
+      </div>
     );
   }
 
   if (!weekStatus) {
     return (
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex justify-center items-center h-40">
-            <p>No active week found. Please contact an administrator.</p>
+      <div className="card-modern">
+        <div className="flex justify-center items-center h-40">
+          <div className="text-center">
+            <Target className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-400">No active week found. Please contact an administrator.</p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
@@ -124,100 +111,161 @@ export function WeekOverview() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="card-modern">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <CardTitle>Current Week Overview</CardTitle>
-            <CardDescription>
+            <h3 className="text-xl font-semibold text-white mb-1">Current Week Progress</h3>
+            <p className="text-gray-400 text-sm">
               {formatDate(weekStatus.startDate)} - {formatDate(weekStatus.endDate)}
-              {' '}
-              {weekStatus.isOpen ? (
-                <span className="inline-flex bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2">
-                  Active
-                </span>
-              ) : (
-                <span className="inline-flex bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full ml-2">
-                  Closed
-                </span>
-              )}
-            </CardDescription>
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {weekStatus.isOpen ? (
+              <span className="badge-success flex items-center gap-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                Active
+              </span>
+            ) : (
+              <span className="badge-error">Closed</span>
+            )}
           </div>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-8">
-          {/* Hours Progress */}
-          <div className="space-y-2">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-sm font-medium">Hours Progress</h3>
-                <p className="text-xs text-muted-foreground">
-                  {weekStatus.totalHoursWorked} of {weekStatus.totalHoursExpected} hours logged
-                </p>
-              </div>
-              <div className="text-xs text-right">
-                <div className="font-medium">{progressPercentage}%</div>
-                <div className="text-muted-foreground">
-                  {weekStatus.remainingHours} hours remaining
-                </div>
+
+        {/* Progress Section */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-3">
+            <div>
+              <h4 className="text-lg font-medium text-white">Hours Progress</h4>
+              <p className="text-sm text-gray-400">
+                {weekStatus.totalHoursWorked} of {weekStatus.totalHoursExpected} hours completed
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold gradient-text">{progressPercentage}%</div>
+              <div className="text-sm text-gray-400">
+                {weekStatus.remainingHours} hours remaining
               </div>
             </div>
-            <Progress value={progressPercentage} className="h-2" />
           </div>
+          
+          <div className="relative">
+            <div className="progress-modern">
+              <motion.div 
+                className="progress-fill"
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercentage}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
+              />
+            </div>
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 opacity-50"></div>
+          </div>
+        </div>
 
-          {/* Work details */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-start space-x-3">
-              <div className="bg-blue-100 p-2 rounded-lg">
-                <Clock3 className="h-4 w-4 text-blue-700" />
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <motion.div 
+            className="glass rounded-xl p-4 border border-white/10"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-500/20 rounded-lg">
+                <Clock3 className="h-5 w-5 text-blue-400" />
               </div>
               <div>
-                <p className="text-sm font-medium">Working Hours</p>
-                <p className="text-xs text-muted-foreground">
-                  {weekStatus.hoursPerDay} hours/day × {weekStatus.daysPerWeek} days
+                <p className="text-xs text-gray-400 uppercase tracking-wide">Daily Hours</p>
+                <p className="text-lg font-semibold text-white">
+                  {weekStatus.hoursPerDay}h × {weekStatus.daysPerWeek}d
                 </p>
               </div>
             </div>
+          </motion.div>
 
-            <div className="flex items-start space-x-3">
-              <div className="bg-green-100 p-2 rounded-lg">
-                <ClockIcon className="h-4 w-4 text-green-700" />
+          <motion.div 
+            className="glass rounded-xl p-4 border border-white/10"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-green-500/20 rounded-lg">
+                <DollarSign className="h-5 w-5 text-green-400" />
               </div>
               <div>
-                <p className="text-sm font-medium">Hourly Rate</p>
-                <p className="text-xs text-muted-foreground">
-                  {formatCurrency(weekStatus.hourlyRate)} per hour
+                <p className="text-xs text-gray-400 uppercase tracking-wide">Hourly Rate</p>
+                <p className="text-lg font-semibold text-white">
+                  {formatCurrency(weekStatus.hourlyRate)}
                 </p>
               </div>
             </div>
+          </motion.div>
 
-            <div className="flex items-start space-x-3">
-              <div className="bg-amber-100 p-2 rounded-lg">
-                <DollarSign className="h-4 w-4 text-amber-700" />
+          <motion.div 
+            className="glass rounded-xl p-4 border border-white/10"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-purple-500/20 rounded-lg">
+                <Target className="h-5 w-5 text-purple-400" />
               </div>
               <div>
-                <p className="text-sm font-medium">Expected Earnings</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-400 uppercase tracking-wide">Expected</p>
+                <p className="text-lg font-semibold text-white">
                   {formatCurrency(weekStatus.expectedEarnings)}
                 </p>
               </div>
             </div>
+          </motion.div>
 
-            <div className="flex items-start space-x-3">
-              <div className="bg-purple-100 p-2 rounded-lg">
-                <DollarSign className="h-4 w-4 text-purple-700" />
+          <motion.div 
+            className="glass rounded-xl p-4 border border-white/10"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-emerald-500/20 rounded-lg">
+                <TrendingUp className="h-5 w-5 text-emerald-400" />
               </div>
               <div>
-                <p className="text-sm font-medium">Current Earnings</p>
-                <p className="text-xs text-muted-foreground">
-                  {formatCurrency(weekStatus.actualEarnings)} ({Math.round((weekStatus.actualEarnings / weekStatus.expectedEarnings) * 100)}%)
+                <p className="text-xs text-gray-400 uppercase tracking-wide">Current</p>
+                <p className="text-lg font-semibold text-white">
+                  {formatCurrency(weekStatus.actualEarnings)}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {Math.round((weekStatus.actualEarnings / weekStatus.expectedEarnings) * 100)}% of target
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Quick Actions */}
+        {weekStatus.remainingHours > 0 && (
+          <motion.div 
+            className="mt-6 p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-xl border border-purple-500/20"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div className="flex items-center gap-3">
+              <Zap className="h-5 w-5 text-yellow-400" />
+              <div>
+                <p className="text-sm font-medium text-white">
+                  Keep up the momentum! 
+                </p>
+                <p className="text-xs text-gray-400">
+                  You have {weekStatus.remainingHours} hours left to reach your weekly goal
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </div>
+    </motion.div>
   );
 }
