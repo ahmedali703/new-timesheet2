@@ -7,6 +7,7 @@ import { Navbar } from '@/components/layout/navbar';
 import { DeveloperDashboard } from '@/components/dashboard/developer-dashboard';
 import { AdminDashboard } from '@/components/dashboard/admin-dashboard';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { TaskProvider } from '@/lib/contexts/task-context';
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -27,15 +28,17 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {session.user?.role === 'admin' || session.user?.role === 'hr' ? (
-          <AdminDashboard />
-        ) : (
-          <DeveloperDashboard />
-        )}
-      </main>
-    </div>
+    <TaskProvider>
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          {session.user?.role === 'admin' || session.user?.role === 'hr' ? (
+            <AdminDashboard />
+          ) : (
+            <DeveloperDashboard />
+          )}
+        </main>
+      </div>
+    </TaskProvider>
   );
 }

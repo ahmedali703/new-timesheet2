@@ -55,6 +55,7 @@ const config: Config = {
         'fade-in-up': 'fadeInUp 0.6s ease-out',
         'float': 'float 6s ease-in-out infinite',
         'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+        'gradient-shift': 'gradientShift 3s ease infinite',
       },
       keyframes: {
         fadeInUp: {
@@ -83,9 +84,18 @@ const config: Config = {
             boxShadow: '0 0 30px rgba(139, 92, 246, 0.5), 0 0 60px rgba(139, 92, 246, 0.3)',
           },
         },
+        gradientShift: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
       },
       backdropBlur: {
         xs: '2px',
+      },
+      backgroundImage: {
+        'gradient-primary': 'linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%)',
+        'gradient-secondary': 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+        'gradient-accent': 'linear-gradient(135deg, #EC4899 0%, #8B5CF6 100%)',
       },
     },
   },
