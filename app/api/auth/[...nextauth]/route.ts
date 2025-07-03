@@ -4,8 +4,10 @@ export const runtime = 'nodejs';
 import NextAuth from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 
-async function handler(req: Request, context: { params: { nextauth: string[] } }) {
+export async function GET(req: Request, context: { params: { nextauth: string[] } }) {
   return NextAuth(req, context, authOptions);
 }
 
-export { handler as GET, handler as POST };
+export async function POST(req: Request, context: { params: { nextauth: string[] } }) {
+  return NextAuth(req, context, authOptions);
+}
