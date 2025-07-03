@@ -1,155 +1,111 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { tasks } from '@/lib/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { users } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import { fetchJiraTasks, getSharedJiraCredentials } from '@/lib/jira-client';
 
-// Handle GET request for a specific task
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const taskId = params.id;
-    
-    // Get the task
-    const task = await db
-      .select()
-      .from(tasks)
-      .where(
-        and(
-          eq(tasks.id, taskId),
-          eq(tasks.userId, session.user.id)
-        )
-      )
-      .limit(1);
+    // Get the user's Jira connection status from the database
+    const userWithJiraDetails = await db.select({
+      email: users.email,
+      jiraConnected: users.jiraConnected
+    })
+    .from(users)
+    .where(eq(users.id, session.user.id))
+    .limit(1);
 
-    if (task.length === 0) {
-      return NextResponse.json({ error: 'Task not found' }, { status: 404 });
+    // Check if user has Jira integration set up
+    if (!userWithJiraDetails[0]?.jiraConnected) {
+      return NextResponse.json({ 
+        tasks: [], 
+        hasJiraIntegration: false,
+        message: "You're not connected to Jira. Please check if your email is registered in Jira."
+      });
     }
 
-    return NextResponse.json({ task: task[0] });
+    // Use shared credentials from environment variables
+    try {
+      // Get the user's email from the database record
+      const userEmail = userWithJiraDetails[0]?.email;
+      
+      if (!userEmail) {
+        throw new Error('User email not found');
+      }
+
+      // Get shared Jira credentials
+      const { apiToken, jiraUrl } = getSharedJiraCredentials();
+      
+      if (!apiToken || !jiraUrl) {
+        throw new Error('Jira credentials not found in environment variables');
+      }
+
+      // Use the jira-client utility to fetch tasks with shared authentication
+      try {
+        // Get pagination parameters from URL
+        const url = new URL(request.url);
+        const page = parseInt(url.searchParams.get('page') || '1');
+        const pageSize = parseInt(url.searchParams.get('pageSize') || '10');
+        
+        // Calculate startAt index based on page number (0-indexed for Jira API)
+        const startAt = (page - 1) * pageSize;
+        
+        // Fetch paginated tasks
+        const jiraTasksResponse = await fetchJiraTasks(userEmail, startAt, pageSize);
+
+        return NextResponse.json({ 
+          tasks: jiraTasksResponse.tasks,
+          hasJiraIntegration: true,
+          jiraUrl: jiraUrl,
+          email: userEmail,
+          pagination: {
+            page,
+            pageSize,
+            total: jiraTasksResponse.total,
+            totalPages: Math.ceil(jiraTasksResponse.total / pageSize),
+            hasMore: jiraTasksResponse.hasMore
+          },
+          debugInfo: {
+            numTasksFound: jiraTasksResponse.tasks.length,
+            totalAvailable: jiraTasksResponse.total,
+            timestamp: new Date().toISOString()
+          }
+        });
+      } catch (fetchError: any) {
+        // Return detailed error information for debugging
+        console.error('Error fetching Jira tasks from client:', fetchError);
+        
+        return NextResponse.json({
+          tasks: [],
+          hasJiraIntegration: true,
+          jiraUrl: jiraUrl,
+          email: userEmail,
+          error: fetchError.message || 'Unknown error fetching Jira tasks',
+          errorDetails: fetchError.toString(),
+          debugInfo: {
+            taskFetchFailed: true,
+            timestamp: new Date().toISOString()
+          }
+        });
+      }
+    } catch (jiraError) {
+      console.error('Error connecting to Jira API:', jiraError);
+      return NextResponse.json({
+        tasks: [],
+        hasJiraIntegration: true,
+        error: 'Failed to connect to Jira. Please check your Jira credentials.'
+      });
+    }
+
   } catch (error) {
-    console.error('Error fetching task:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-// Handle PUT request to update a specific task
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const taskId = params.id;
-    const body = await request.json();
-    
-    // Validate input
-    if (!body.description || !body.hours) {
-      return NextResponse.json(
-        { error: 'Description and hours are required' },
-        { status: 400 }
-      );
-    }
-
-    // Check if the task exists and belongs to the user
-    const existingTask = await db
-      .select()
-      .from(tasks)
-      .where(
-        and(
-          eq(tasks.id, taskId),
-          eq(tasks.userId, session.user.id)
-        )
-      )
-      .limit(1);
-
-    if (existingTask.length === 0) {
-      return NextResponse.json({ error: 'Task not found' }, { status: 404 });
-    }
-
-    // Only allow updates if task is in pending status
-    if (existingTask[0].status !== 'pending') {
-      return NextResponse.json(
-        { error: 'Only pending tasks can be updated' },
-        { status: 403 }
-      );
-    }
-
-    // Update the task
-    await db
-      .update(tasks)
-      .set({
-        description: body.description,
-        hours: body.hours.toString(),
-        jiraTaskId: body.jiraTaskId || null,
-        updatedAt: new Date(),
-      })
-      .where(eq(tasks.id, taskId));
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Error updating task:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-// Handle DELETE request to delete a specific task
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const taskId = params.id;
-    
-    // Check if the task exists and belongs to the user
-    const existingTask = await db
-      .select()
-      .from(tasks)
-      .where(
-        and(
-          eq(tasks.id, taskId),
-          eq(tasks.userId, session.user.id)
-        )
-      )
-      .limit(1);
-
-    if (existingTask.length === 0) {
-      return NextResponse.json({ error: 'Task not found' }, { status: 404 });
-    }
-
-    // Only allow deletion if task is in pending status
-    if (existingTask[0].status !== 'pending') {
-      return NextResponse.json(
-        { error: 'Only pending tasks can be deleted' },
-        { status: 403 }
-      );
-    }
-
-    // Delete the task
-    await db
-      .delete(tasks)
-      .where(eq(tasks.id, taskId));
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Error deleting task:', error);
+    console.error('Error fetching Jira tasks:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
