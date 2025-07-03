@@ -6,13 +6,28 @@ import * as schema from './schema';
 const databaseUrl = process.env.DATABASE_URL;
 
 if (!databaseUrl) {
+  console.error('DATABASE_URL environment variable is not set');
   throw new Error('DATABASE_URL environment variable is not set');
 }
 
-// Create the neon connection with the database URL
-const sql = neon(databaseUrl);
+// Log the database URL (without credentials) for debugging
+console.log('Database URL configured:', databaseUrl.replace(/\/\/.*@/, '//***:***@'));
 
-// Create the drizzle instance
-export const db = drizzle(sql, { schema });
+let sql: ReturnType<typeof neon>;
+let db: ReturnType<typeof drizzle>;
 
+try {
+  // Create the neon connection with the database URL
+  sql = neon(databaseUrl);
+  
+  // Create the drizzle instance
+  db = drizzle(sql, { schema });
+  
+  console.log('Database connection initialized successfully');
+} catch (error) {
+  console.error('Failed to initialize database connection:', error);
+  throw new Error(`Database initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+}
+
+export { db };
 export * from './schema';
