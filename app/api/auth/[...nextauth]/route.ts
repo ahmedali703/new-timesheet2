@@ -1,12 +1,9 @@
 export const dynamic = 'force-dynamic';
 
-import NextAuth from 'next-auth/next';
+import NextAuth from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-export async function GET(req: Request, context: { params: { nextauth: string[] } }) {
-  return NextAuth(req, context, authOptions);
-}
+// Handle auth requests in the App Router format
+const handler = NextAuth(authOptions);
 
-export async function POST(req: Request, context: { params: { nextauth: string[] } }) {
-  return NextAuth(req, context, authOptions);
-}
+export { handler as GET, handler as POST }
