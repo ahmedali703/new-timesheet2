@@ -1,7 +1,6 @@
 import { Adapter, AdapterUser, AdapterAccount, AdapterSession, VerificationToken } from 'next-auth/adapters';
 import type { Awaitable } from 'next-auth';
 import { neon } from '@neondatabase/serverless';
-import dotenv from 'dotenv';
 import { randomUUID } from 'crypto';
 import type { NeonQueryFunction } from '@neondatabase/serverless';
 
@@ -28,9 +27,6 @@ function getFirstResult<T>(result: unknown): T | null {
   const items = safeGetResult<T>(result);
   return items && items.length > 0 ? items[0] : null;
 }
-
-// Load environment variables
-dotenv.config();
 
 // Create a direct connection to Neon for raw SQL queries
 const rawDb = process.env.DATABASE_URL ? neon(process.env.DATABASE_URL) : null;
