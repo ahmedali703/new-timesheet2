@@ -15,23 +15,29 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get current user with hourly rate
-    const currentUser = await db.query.users.findFirst({
-      where: eq(users.id, session.user.id),
-    });
+    // Get current user with hourly rate using select instead of query
+    const currentUserResult = await db.select()
+      .from(users)
+      .where(eq(users.id, session.user.id))
+      .limit(1);
 
-    if (!currentUser) {
+    if (currentUserResult.length === 0) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Get current or most recent week
-    const currentWeek = await db.query.weeks.findFirst({
-      orderBy: [desc(weeks.startDate)],
-    });
+    const currentUser = currentUserResult[0];
 
-    if (!currentWeek) {
+    // Get current or most recent week using select instead of query
+    const currentWeekResult = await db.select()
+      .from(weeks)
+      .orderBy(desc(weeks.startDate))
+      .limit(1);
+
+    if (currentWeekResult.length === 0) {
       return NextResponse.json({ error: 'No weeks found' }, { status: 404 });
     }
+
+    const currentWeek = currentWeekResult[0];
 
     // Get user's work schedule or use default values
     let daysPerWeek = 5; // Default
