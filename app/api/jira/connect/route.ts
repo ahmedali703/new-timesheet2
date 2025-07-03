@@ -69,12 +69,14 @@ export async function GET() {
     const { jiraUrl } = getSharedJiraCredentials();
 
     // Check if the user is connected to Jira
-    const userWithJiraDetails = await db.query.users.findFirst({
-      where: eq(users.id, session.user.id),
-      columns: { jiraConnected: true }
-    });
+    const userWithJiraDetails = await db.select({
+      jiraConnected: users.jiraConnected
+    })
+    .from(users)
+    .where(eq(users.id, session.user.id))
+    .limit(1);
     
-    const hasJiraConnection = !!userWithJiraDetails?.jiraConnected;
+    const hasJiraConnection = !!userWithJiraDetails[0]?.jiraConnected;
     
     if (hasJiraConnection) {
       return NextResponse.json({
